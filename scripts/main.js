@@ -34,22 +34,25 @@ function resize() {
   const newWidth = INITIAL_CANVAS_WIDTH * ratio;
   const newHeight = INITIAL_CANVAS_HEIGHT * ratio;
 
+  canvas.width = newWidth;
+  canvas.height = newHeight;
+
   // Set the width and height of the canvas using CSS styles
   canvas.style.width = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
+
+  return { newWidth, newHeight };
 }
-
-// Call resize() when the page is loaded, to set the initial size of the canvas
-window.addEventListener('load', resize, false);
-
-// Call resize() whenever the window is resized, to update the size of the canvas
-window.addEventListener('resize', resize);
 
 class GameBasics {
   constructor(canvas) {
     this.canvas = canvas;
     this.width = canvas.width;
     this.height = canvas.height;
+
+    this.level = 1;
+    this.score = 0;
+    this.shields = 2;
 
     // this.playBoundaries = {
     //   top: 150,
@@ -72,6 +75,8 @@ class GameBasics {
 
     // we collect here the different positions, states of the game
     this.positionContainer = new Stack();
+
+    this.pressedKeys = {};
   }
 
   // return to current game position, status. Always returns to top element of position container
@@ -103,20 +108,36 @@ class GameBasics {
     this.positionContainer.pop();
   }
 
+  clearCanvas() {
+    ctx.clearRect(0, 0, this.width, this.height);
+  }
+
   start() {
+    addEventListeners(this);
+
     setInterval(() => {
       gameLoop(this);
     }, this.setting.updateMilliseconds);
 
     this.goToPosition(new OpeningPosition());
   }
+
+  onKeyDown(keyCode) {
+    this.pressedKeys[keyCode] = true;
+
+    const currentPosition = this.currentPosition();
+    if (currentPosition?.onKeyDown) {
+      currentPosition.onKeyDown(this, keyCode);
+    }
+  }
+
+  onKeyUp(keyCode) {
+    delete this.pressedKeys[keyCode];
+  }
 }
 
-const play = new GameBasics(canvas);
-play.start();
-
 function gameLoop(play) {
-  let currentPosition = play.currentPosition();
+  const currentPosition = play.currentPosition();
   if (currentPosition) {
     // update
     if (currentPosition.update) {
@@ -129,3 +150,56 @@ function gameLoop(play) {
     }
   }
 }
+
+function addEventListeners(play) {
+  // Call resize() when the page is loaded, to set the initial size of the canvas
+  window.addEventListener(
+    'load',
+    () => {
+      const { newWidth, newHeight } = resize();
+      play.width = newWidth;
+      play.height = newHeight;
+    },
+    false
+  );
+
+  // Call resize() whenever the window is resized, to update the size of the canvas
+  window.addEventListener('resize', () => {
+    const { newWidth, newHeight } = resize();
+    play.width = newWidth;
+    play.height = newHeight;
+  });
+
+  window.addEventListener('keydown', (e) => {
+    const keyCode = e.code;
+
+    if (
+      keyCode === 'ArrowLeft' ||
+      keyCode === 'ArrowRight' ||
+      keyCode === 'Space'
+    ) {
+      // Prevent the event from triggering browser navigation shortcuts like Back
+      e.preventDefault();
+    }
+
+    play.onKeyDown(keyCode);
+  });
+
+  window.addEventListener('keyup', (e) => {
+    const keyCode = e.code;
+
+    if (
+      keyCode === 'ArrowLeft' ||
+      keyCode === 'ArrowRight' ||
+      keyCode === 'Space'
+    ) {
+      // Prevent the event from triggering browser navigation shortcuts like Back
+      e.preventDefault();
+    }
+
+    play.onKeyUp(keyCode);
+  });
+}
+
+const play = new GameBasics(canvas);
+play.start();

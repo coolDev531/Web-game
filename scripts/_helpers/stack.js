@@ -7,7 +7,7 @@ class Stack {
   // Add element to top of stack
   push(element) {
     this.items[this.count] = element;
-    console.log(`${element} added to ${this.count}`);
+    console.log(`${JSON.stringify(element)} added to ${this.count}`);
     this.count += 1;
     return this.count - 1;
   }
@@ -24,19 +24,19 @@ class Stack {
 
   // Check top element in stack
   peek() {
-    console.log(`Top element is ${this.items[this.count - 1]}`);
+    // console.log(`Top element is ${JSON.stringify(this.items[this.count - 1])}`);
     return this.items[this.count - 1];
   }
 
   // Check if stack is empty
   isEmpty() {
-    console.log(this.count === 0 ? 'Stack is empty' : 'Stack is NOT empty');
+    // console.log(this.count === 0 ? 'Stack is empty' : 'Stack is NOT empty');
     return this.count === 0;
   }
 
   // Check size of stack
   size() {
-    console.log(`${this.count} elements in stack`);
+    // console.log(`${this.count} elements in stack`);
     return this.count;
   }
 
