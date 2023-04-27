@@ -3,7 +3,7 @@ const INITIAL_CANVAS_HEIGHT = 750;
 const SCROLLBAR_HEIGHT = 20;
 
 const canvas = document.getElementById('ufoCanvas');
-
+const ctx = canvas.getContext('2d');
 canvas.width = INITIAL_CANVAS_WIDTH;
 canvas.height = INITIAL_CANVAS_HEIGHT;
 
@@ -67,6 +67,7 @@ class GameBasics {
 
     this.setting = {
       // game settings
+      updateMilliseconds: 1000 / 60,
     };
 
     // we collect here the different positions, states of the game
@@ -100,5 +101,31 @@ class GameBasics {
 
   popPosition() {
     this.positionContainer.pop();
+  }
+
+  start() {
+    setInterval(() => {
+      gameLoop(this);
+    }, this.setting.updateMilliseconds);
+
+    this.goToPosition(new OpeningPosition());
+  }
+}
+
+const play = new GameBasics(canvas);
+play.start();
+
+function gameLoop(play) {
+  let currentPosition = play.currentPosition();
+  if (currentPosition) {
+    // update
+    if (currentPosition.update) {
+      currentPosition.update(play);
+    }
+
+    // draw
+    if (currentPosition.draw) {
+      currentPosition.draw(play);
+    }
   }
 }
