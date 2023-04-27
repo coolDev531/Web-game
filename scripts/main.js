@@ -44,3 +44,61 @@ window.addEventListener('load', resize, false);
 
 // Call resize() whenever the window is resized, to update the size of the canvas
 window.addEventListener('resize', resize);
+
+class GameBasics {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.width = canvas.width;
+    this.height = canvas.height;
+
+    // this.playBoundaries = {
+    //   top: 150,
+    //   bottom: 650,
+    //   left: 100,
+    //   right: 800,
+    // };
+
+    this.playBoundaries = {
+      top: this.height * 0.2, // 20% of canvas height from top
+      bottom: this.height * 0.867, // 86.7% of canvas height from top
+      left: this.width * 0.111, // 11.1% of canvas width from left
+      right: this.width * 0.889, // 88.9% of canvas width from left
+    };
+
+    this.setting = {
+      // game settings
+    };
+
+    // we collect here the different positions, states of the game
+    this.positionContainer = new Stack();
+  }
+
+  // return to current game position, status. Always returns to top element of position container
+  currentPosition() {
+    return !this.positionContainer.isEmpty()
+      ? this.positionContainer.peek()
+      : null;
+  }
+
+  goToPosition(position) {
+    if (this.currentPosition()) {
+      this.positionContainer.clear();
+    }
+
+    // if we find an 'entry' in a given position. we call it.
+    if (position.entry) {
+      position.entry(play);
+    }
+
+    // setting the current game position in the positionContainer
+    this.pushPosition(position);
+  }
+
+  pushPosition(position) {
+    this.positionContainer.push(position);
+  }
+
+  popPosition() {
+    this.positionContainer.pop();
+  }
+}
