@@ -91,8 +91,8 @@ class GameBasics {
     }
 
     // if we find an 'entry' in a given scene. we call it.
-    if (scene.entry) {
-      scene.entry(play);
+    if (scene.onMounted) {
+      scene.onMounted(play);
     }
 
     // setting the current game scene in the scenesContainer
