@@ -6,6 +6,8 @@ class GameScene extends Scene {
     this.level = level;
     this.object = null;
     this.spaceship = null;
+    this.bullets = [];
+    this.lastBulletTime = null;
     // this.spaceshipSpeed = this.settings.spaceshipSpeed;
   }
 
@@ -21,6 +23,11 @@ class GameScene extends Scene {
 
   update(play) {
     this.spaceship.handleMovement(play);
+    this.spaceship.handleShoot(play, this);
+
+    this.bullets.forEach((bullet, index) => {
+      bullet.move(play, index);
+    });
   }
 
   destroy() {
@@ -35,9 +42,14 @@ class GameScene extends Scene {
       this.spaceship.position.x - this.spaceship.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
       this.spaceship.position.y - this.spaceship.height / 2 // we want to make sure we're handling the center of the spaceship image
     );
+
+    this.bullets.forEach((bullet) => {
+      bullet.create();
+    });
   }
 
   handleResize() {
+    // can't pass play to this function to get current scene because the removeEventListener will not work so using global currentScene from window
     window.currentScene.spaceship.position.x = play.width / 2;
     window.currentScene.spaceship.position.y = play.boundaries.bottom;
   }

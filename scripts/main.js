@@ -72,6 +72,8 @@ class GameBasics {
       // game settings
       updateSeconds: 1 / 60,
       spaceshipSpeed: 200,
+      bulletSpeed: 130,
+      bulletMaxFrequency: 500, // how many bullets can be fired by the spaceship per second one after another
     };
 
     // we collect here the different scenes, states of the game
