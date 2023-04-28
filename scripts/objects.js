@@ -20,34 +20,22 @@ class GameObject {
   move(play, direction) {
     const { updateSeconds } = play.settings;
 
-    switch (direction) {
-      case 'left':
-        this.position.x -= this.moveSpeed * updateSeconds;
-        break;
-      case 'right':
-        this.position.x += this.moveSpeed * updateSeconds;
-        break;
+    const operations = {
+      left: () => (this.position.x -= this.moveSpeed * updateSeconds),
+      right: () => (this.position.x += this.moveSpeed * updateSeconds),
 
-      /* in mathematics, the positive y-axis generally points upwards and the negative y-axis points downwards.
-        However, in computer graphics, it's common for the positive y-axis to point downwards instead.
-         which is why we're using the opposite of what we would expect for moving up and down */
-
-      /* 
-      This may seem counterintuitive at first, but it's often more convenient for representing screen coordinates,
-       because the origin (0, 0) is located at the top-left corner of the screen. 
-       So, increasing the y-coordinate moves the object downwards, towards the bottom of the screen.
+      /*  in mathematics, the positive y-axis generally points upwards and the negative y-axis points downwards.
+          However, in computer graphics, it's common for the positive y-axis to point downwards instead.
+          which is why we're using the opposite of what we would expect for moving up and down 
+          This may seem counterintuitive at first, but it's often more convenient for representing screen coordinates,
+          because the origin (0, 0) is located at the top-left corner of the screen. 
+          So, increasing the y-coordinate moves the object downwards, towards the bottom of the screen.
       */
-      case 'up':
-        /* When moving up, the y-coordinate is decremented by the moveSpeed multiplied by updateSeconds,
-           which makes sense because moving up means the object is moving towards the top of the screen */
-        this.position.y -= this.moveSpeed * updateSeconds;
-        break;
-      case 'down':
-        /* when moving down, the y - coordinate is incremented, 
-         which makes sense because moving down means the object is moving towards the bottom of the screen */
-        this.position.y += this.moveSpeed * updateSeconds;
-        break;
-    }
+      up: () => (this.position.y -= this.moveSpeed * updateSeconds),
+      down: () => (this.position.y += this.moveSpeed * updateSeconds),
+    };
+
+    operations[direction]();
   }
 }
 
