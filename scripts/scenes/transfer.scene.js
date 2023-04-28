@@ -1,9 +1,9 @@
 class TransferScene extends Scene {
   constructor(level) {
+    const { framesElapsed } = super();
     this.level = level;
     this.fontSize = 140;
     this.fontColor = 255;
-    const { framesElapsed } = super();
     this.framesElapsed = framesElapsed;
   }
 
@@ -23,6 +23,8 @@ class TransferScene extends Scene {
   update() {
     super.update();
     // 2s 60fps -> 120fps = 2s
+    // this.framesElapsed++;
+
     // if (this.framesElapsed > 120) {
     //   play.goToScene(new GameScene(play.settings, this.level));
     // }
