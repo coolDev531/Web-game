@@ -138,16 +138,19 @@ class GameBasics {
 
 function gameLoop(play) {
   const currentPosition = play.currentPosition();
-  if (currentPosition) {
-    // update
-    if (currentPosition.update) {
-      currentPosition.update(play);
-    }
 
-    // draw
-    if (currentPosition.draw) {
-      currentPosition.draw(play);
-    }
+  if (!currentPosition) {
+    return;
+  }
+
+  // update
+  if (currentPosition.update) {
+    currentPosition.update(play);
+  }
+
+  // draw
+  if (currentPosition.draw) {
+    currentPosition.draw(play);
   }
 }
 
@@ -187,16 +190,6 @@ function addEventListeners(play) {
 
   window.addEventListener('keyup', (e) => {
     const keyCode = e.code;
-
-    if (
-      keyCode === 'ArrowLeft' ||
-      keyCode === 'ArrowRight' ||
-      keyCode === 'Space'
-    ) {
-      // Prevent the event from triggering browser navigation shortcuts like Back
-      e.preventDefault();
-    }
-
     play.onKeyUp(keyCode);
   });
 }

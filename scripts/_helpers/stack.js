@@ -7,7 +7,6 @@ class Stack {
   // Add element to top of stack
   push(element) {
     this.items[this.count] = element;
-    console.log(`${JSON.stringify(element)} added to ${this.count}`);
     this.count += 1;
     return this.count - 1;
   }
@@ -53,7 +52,7 @@ class Stack {
   clear() {
     this.items = [];
     this.count = 0;
-    console.log('Stack cleared..');
+    // console.log('Stack cleared..');
     return this.items;
   }
 }
