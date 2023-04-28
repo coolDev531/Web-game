@@ -9,8 +9,7 @@ class GameScene extends Scene {
     // this.spaceshipSpeed = this.settings.spaceshipSpeed;
   }
 
-  // another possible names for 'mounted': awake, start
-  onMount(play) {
+  awake(play) {
     this.spaceship = new Spaceship(
       play.width / 2,
       play.boundaries.bottom,
@@ -20,12 +19,12 @@ class GameScene extends Scene {
     window.addEventListener('resize', this.handleResize, true);
   }
 
-  onDestroy() {
-    window.removeEventListener('resize', this.handleResize, true);
-  }
-
   update(play) {
     this.spaceship.handleMovement(play);
+  }
+
+  destroy() {
+    window.removeEventListener('resize', this.handleResize, true);
   }
 
   draw(play) {

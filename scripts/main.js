@@ -87,13 +87,13 @@ class GameBasics {
 
   goToScene(scene) {
     if (this.currentScene()) {
-      this.currentScene().onDestroy?.();
+      this.currentScene().destroy?.();
       this.scenesContainer.clear();
     }
 
-    // if we find an 'entry' in a given scene. we call it.
-    if (scene.onMount) {
-      scene.onMount(play);
+    // if we find an 'awake' fn in a given scene. we call it.
+    if (scene.awake) {
+      scene.awake(play);
     }
 
     // setting the current game scene in the scenesContainer
