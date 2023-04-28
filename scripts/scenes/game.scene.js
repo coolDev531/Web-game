@@ -9,7 +9,7 @@ class GameScene extends Scene {
     // this.spaceshipSpeed = this.settings.spaceshipSpeed;
   }
 
-  // another possible names for 'entry': awake, start
+  // another possible names for 'mounted': awake, start
   onMounted(play) {
     this.spaceship = new Spaceship(
       play.width / 2,
