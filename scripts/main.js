@@ -87,12 +87,13 @@ class GameBasics {
 
   goToScene(scene) {
     if (this.currentScene()) {
+      this.currentScene().onDestroy?.();
       this.scenesContainer.clear();
     }
 
     // if we find an 'entry' in a given scene. we call it.
-    if (scene.onMounted) {
-      scene.onMounted(play);
+    if (scene.onMount) {
+      scene.onMount(play);
     }
 
     // setting the current game scene in the scenesContainer
@@ -100,6 +101,7 @@ class GameBasics {
   }
 
   pushScene(scene) {
+    window.currentScene = scene;
     this.scenesContainer.push(scene);
   }
 
@@ -167,6 +169,13 @@ function addEventListeners(play) {
       const { newWidth, newHeight } = resize();
       play.width = newWidth;
       play.height = newHeight;
+
+      play.boundaries = {
+        top: play.height * 0.2, // 20% of canvas height from top
+        bottom: play.height * 0.867, // 86.7% of canvas height from top
+        left: play.width * 0.111, // 11.1% of canvas width from left
+        right: play.width * 0.889, // 88.9% of canvas width from left
+      };
     },
     false
   );
@@ -176,6 +185,13 @@ function addEventListeners(play) {
     const { newWidth, newHeight } = resize();
     play.width = newWidth;
     play.height = newHeight;
+
+    play.boundaries = {
+      top: play.height * 0.2, // 20% of canvas height from top
+      bottom: play.height * 0.867, // 86.7% of canvas height from top
+      left: play.width * 0.111, // 11.1% of canvas width from left
+      right: play.width * 0.889, // 88.9% of canvas width from left
+    };
   });
 
   window.addEventListener('keydown', (e) => {

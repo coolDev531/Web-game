@@ -10,12 +10,23 @@ class GameScene extends Scene {
   }
 
   // another possible names for 'mounted': awake, start
-  onMounted(play) {
+  onMount(play) {
     this.spaceship = new Spaceship(
       play.width / 2,
       play.boundaries.bottom,
       play.settings.spaceshipSpeed
     );
+
+    window.addEventListener('resize', this.handleResize, true);
+  }
+
+  handleResize() {
+    window.currentScene.spaceship.position.x = play.width / 2;
+    window.currentScene.spaceship.position.y = play.boundaries.bottom;
+  }
+
+  onDestroy() {
+    window.removeEventListener('resize', this.handleResize, true);
   }
 
   update(play) {
