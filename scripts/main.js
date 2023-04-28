@@ -54,23 +54,24 @@ class GameBasics {
     this.score = 0;
     this.shields = 2;
 
-    // this.playBoundaries = {
+    // this.boundaries = {
     //   top: 150,
     //   bottom: 650,
     //   left: 100,
     //   right: 800,
     // };
 
-    this.playBoundaries = {
+    this.boundaries = {
       top: this.height * 0.2, // 20% of canvas height from top
       bottom: this.height * 0.867, // 86.7% of canvas height from top
       left: this.width * 0.111, // 11.1% of canvas width from left
       right: this.width * 0.889, // 88.9% of canvas width from left
     };
 
-    this.setting = {
+    this.settings = {
       // game settings
-      updateMilliseconds: 1000 / 60,
+      updateSeconds: 1 / 60,
+      spaceshipSpeed: 200,
     };
 
     // we collect here the different scenes, states of the game
@@ -112,12 +113,18 @@ class GameBasics {
 
   start() {
     addEventListeners(this);
+    this.goToScene(new OpeningScene());
 
+    const sixtyFps = this.settings.updateSeconds * 1000; // 16.66666667ms
     setInterval(() => {
       gameLoop(this);
-    }, this.setting.updateMilliseconds);
+    }, sixtyFps); // convert to ms
 
-    this.goToScene(new OpeningScene());
+    // devTools
+    window.goToScene = (sceneKey) => {
+      const scene = selectScene(sceneKey);
+      this.goToScene(scene);
+    };
   }
 
   onKeyDown(keyCode) {
@@ -194,3 +201,12 @@ function addEventListeners(play) {
 
 const play = new GameBasics(canvas);
 play.start();
+
+function selectScene(key) {
+  switch (key) {
+    case 'opening':
+      return new OpeningScene();
+    case 'game':
+      return new GameScene();
+  }
+}

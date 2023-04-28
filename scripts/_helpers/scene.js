@@ -8,7 +8,7 @@ class Scene {
     play.clearCanvas();
   }
 
-  update() {
+  update(play) {
     // Base update method that increments the frames elapsed
     this.framesElapsed++;
   }

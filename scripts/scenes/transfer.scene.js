@@ -1,10 +1,10 @@
 class TransferScene extends Scene {
   constructor(level) {
-    const { framesElapsed } = super();
+    super();
     this.level = level;
     this.fontSize = 140;
     this.fontColor = 255;
-    this.framesElapsed = framesElapsed;
+    // this.framesElapsed; // value inherited from super
   }
 
   draw(play) {
@@ -22,6 +22,7 @@ class TransferScene extends Scene {
 
   update() {
     super.update();
+    // console.log('frames elapsed', this.framesElapsed); // value inherited from super does not need to be declared in constructor
     // 2s 60fps -> 120fps = 2s
     // this.framesElapsed++;
 
