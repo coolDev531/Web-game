@@ -26,7 +26,7 @@ class GameScene extends Scene {
     this.spaceship.handleShoot(play, this);
 
     this.bullets.forEach((bullet, index) => {
-      bullet.move(play, index);
+      bullet.action(play, index);
     });
   }
 
@@ -44,7 +44,7 @@ class GameScene extends Scene {
     );
 
     this.bullets.forEach((bullet) => {
-      bullet.create();
+      bullet.draw();
     });
   }
 
