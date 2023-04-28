@@ -20,11 +20,6 @@ class GameScene extends Scene {
     window.addEventListener('resize', this.handleResize, true);
   }
 
-  handleResize() {
-    window.currentScene.spaceship.position.x = play.width / 2;
-    window.currentScene.spaceship.position.y = play.boundaries.bottom;
-  }
-
   onDestroy() {
     window.removeEventListener('resize', this.handleResize, true);
   }
@@ -41,5 +36,10 @@ class GameScene extends Scene {
       this.spaceship.position.x - this.spaceship.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
       this.spaceship.position.y - this.spaceship.height / 2 // we want to make sure we're handling the center of the spaceship image
     );
+  }
+
+  handleResize() {
+    window.currentScene.spaceship.position.x = play.width / 2;
+    window.currentScene.spaceship.position.y = play.boundaries.bottom;
   }
 }
