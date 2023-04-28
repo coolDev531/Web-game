@@ -10,7 +10,7 @@ class GameScene extends Scene {
   }
 
   // another possible names for 'entry': awake, start
-  entry(play) {
+  onMounted(play) {
     this.spaceship = new Spaceship(
       play.width / 2,
       play.boundaries.bottom,
