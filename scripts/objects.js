@@ -112,7 +112,7 @@ class Bullet extends GameObject {
     ctx.fillRect(this.position.x - 1, this.position.y - 6, 2, 6);
   }
 
-  start(play, index) {
+  fire(play, index) {
     this.move(play, 'up'); // move() derived from GameObject super class
 
     // if the bullet is out of the canvas, remove it from the bullets array
