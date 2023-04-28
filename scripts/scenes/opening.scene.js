@@ -1,14 +1,13 @@
-class OpeningPosition {
-  constructor() {}
+class OpeningScene extends Scene {
+  constructor() {
+    const { framesElapsed } = super();
+  }
 
   draw(play) {
+    super.draw(play);
+
     const { width, height } = play;
-
-    // get rid of all the items on the screen
-    play.clearCanvas();
-
     ctx.font = '80px Comic Sans MS';
-
     ctx.textAlign = 'center';
 
     /* const gradient = ctx.createLinearGradient(
@@ -68,7 +67,7 @@ class OpeningPosition {
   onKeyDown(play, keyCode) {
     if (keyCode === 'Space') {
       // space key
-      play.goToPosition(new TransferPosition(play.level));
+      play.goToScene(new TransferScene(play.level));
     }
   }
 }

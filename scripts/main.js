@@ -73,39 +73,37 @@ class GameBasics {
       updateMilliseconds: 1000 / 60,
     };
 
-    // we collect here the different positions, states of the game
-    this.positionContainer = new Stack();
+    // we collect here the different scenes, states of the game
+    this.scenesContainer = new Stack();
 
     this.pressedKeys = {};
   }
 
-  // return to current game position, status. Always returns to top element of position container
-  currentPosition() {
-    return !this.positionContainer.isEmpty()
-      ? this.positionContainer.peek()
-      : null;
+  // return to current game scene, status. Always returns to top element of scenes container
+  currentScene() {
+    return !this.scenesContainer.isEmpty() ? this.scenesContainer.peek() : null;
   }
 
-  goToPosition(position) {
-    if (this.currentPosition()) {
-      this.positionContainer.clear();
+  goToScene(scene) {
+    if (this.currentScene()) {
+      this.scenesContainer.clear();
     }
 
-    // if we find an 'entry' in a given position. we call it.
-    if (position.entry) {
-      position.entry(play);
+    // if we find an 'entry' in a given scene. we call it.
+    if (scene.entry) {
+      scene.entry(play);
     }
 
-    // setting the current game position in the positionContainer
-    this.pushPosition(position);
+    // setting the current game scene in the scenesContainer
+    this.pushScene(scene);
   }
 
-  pushPosition(position) {
-    this.positionContainer.push(position);
+  pushScene(scene) {
+    this.scenesContainer.push(scene);
   }
 
-  popPosition() {
-    this.positionContainer.pop();
+  popScene() {
+    this.scenesContainer.pop();
   }
 
   clearCanvas() {
@@ -119,15 +117,15 @@ class GameBasics {
       gameLoop(this);
     }, this.setting.updateMilliseconds);
 
-    this.goToPosition(new OpeningPosition());
+    this.goToScene(new OpeningScene());
   }
 
   onKeyDown(keyCode) {
     this.pressedKeys[keyCode] = true;
 
-    const currentPosition = this.currentPosition();
-    if (currentPosition?.onKeyDown) {
-      currentPosition.onKeyDown(this, keyCode);
+    const currentScene = this.currentScene();
+    if (currentScene?.onKeyDown) {
+      currentScene.onKeyDown(this, keyCode);
     }
   }
 
@@ -137,20 +135,20 @@ class GameBasics {
 }
 
 function gameLoop(play) {
-  const currentPosition = play.currentPosition();
+  const currentScene = play.currentScene();
 
-  if (!currentPosition) {
+  if (!currentScene) {
     return;
   }
 
   // update
-  if (currentPosition.update) {
-    currentPosition.update(play);
+  if (currentScene.update) {
+    currentScene.update(play);
   }
 
   // draw
-  if (currentPosition.draw) {
-    currentPosition.draw(play);
+  if (currentScene.draw) {
+    currentScene.draw(play);
   }
 }
 

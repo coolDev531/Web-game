@@ -1,14 +1,14 @@
-// init class
-class TransferPosition {
+class TransferScene extends Scene {
   constructor(level) {
     this.level = level;
     this.fontSize = 140;
     this.fontColor = 255;
-    // this.framesElapsed = 1;
+    const { framesElapsed } = super();
+    this.framesElapsed = framesElapsed;
   }
 
   draw(play) {
-    play.clearCanvas();
+    super.draw(play);
     ctx.font = `${this.fontSize}px Comic Sans MS`;
     ctx.textAlign = 'center';
     ctx.fillStyle = `rgba(255,${this.fontColor},${this.fontColor},1)`;
@@ -21,18 +21,17 @@ class TransferPosition {
   }
 
   update() {
+    super.update();
     // 2s 60fps -> 120fps = 2s
-    // this.framesElapsed++;
-
     // if (this.framesElapsed > 120) {
-    //   play.goToPosition(new InGamePosition(play.settings, this.level));
+    //   play.goToScene(new GameScene(play.settings, this.level));
     // }
 
     this.fontSize -= 1;
     this.fontColor -= 1.5;
 
     if (this.fontSize < 1) {
-      play.goToPosition(new InGamePosition(play.setting, this.level));
+      play.goToScene(new GameScene(play.setting, this.level));
     }
   }
 }
