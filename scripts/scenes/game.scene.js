@@ -27,8 +27,8 @@ class GameScene extends Scene {
 
     ctx.drawImage(
       this.spaceship.image,
-      this.spaceship.x - this.spaceship.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
-      this.spaceship.y - this.spaceship.height / 2 // we want to make sure we're handling the center of the spaceship image
+      this.spaceship.position.x - this.spaceship.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
+      this.spaceship.position.y - this.spaceship.height / 2 // we want to make sure we're handling the center of the spaceship image
     );
   }
 }
