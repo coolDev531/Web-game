@@ -183,14 +183,17 @@ class Ufo extends GameObject {
     /* clampedX is the x position of the ufo after it has been clamped to the boundaries of the canvas
        if the ufo is on the left boundary, clampedX will be equal to the left boundary
        if the ufo is on the right boundary, clampedX will be equal to the right boundary
-       if the ufo is not on the boundary, clampedX will be equal to the ufo's current x position */
+       if the ufo is not on the boundary, clampedX will be equal to the ufo's current x position
+    */
 
-    if (clampedX === play.boundaries.right) {
-      // if the ufo is on the right boundary, turn around (start moving left)
+    /* why are we comparing clamedX with this.position.x?
+       because we want to know if the ufo is on the boundary
+       if the ufo is on the boundary, clampedX will be different from this.position.x
+       if the ufo is not on the boundary, clampedX will be equal to this.position.x 
+    */
+
+    if (clampedX !== this.position.x) {
       this.turnAround *= -1;
-    } else if (clampedX === play.boundaries.left) {
-      // if the ufo is on the left boundary, turn around (start moving right)
-      this.turnAround *= 1;
     }
   }
 }
