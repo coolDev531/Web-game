@@ -74,6 +74,10 @@ class GameBasics {
       spaceshipSpeed: 200,
       bulletSpeed: 130,
       bulletMaxFrequency: 500, // how many bullets can be fired by the spaceship per second one after another
+
+      ufoRows: 4,
+      ufoColumns: 8,
+      ufoSpeed: 35,
     };
 
     // we collect here the different scenes, states of the game
@@ -225,6 +229,6 @@ function selectScene(key) {
     case 'opening':
       return new OpeningScene();
     case 'game':
-      return new GameScene();
+      return new GameScene(this.settings, 1);
   }
 }

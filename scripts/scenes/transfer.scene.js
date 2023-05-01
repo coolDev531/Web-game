@@ -34,7 +34,7 @@ class TransferScene extends Scene {
     this.fontColor -= 1.5;
 
     if (this.fontSize < 1) {
-      play.goToScene(new GameScene(play.setting, this.level));
+      play.goToScene(new GameScene(play.settings, this.level));
     }
   }
 }

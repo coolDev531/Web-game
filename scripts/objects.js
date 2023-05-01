@@ -9,12 +9,23 @@ class GameObject {
 
     this.width = null;
     this.height = null;
+  }
 
+  setImage(src) {
     this.image = new Image();
     this.image.onload = () => {
       this.width = this.image.naturalWidth;
       this.height = this.image.naturalHeight;
     };
+    this.image.src = src;
+  }
+
+  drawImage() {
+    ctx.drawImage(
+      this.image,
+      this.position.x - this.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
+      this.position.y - this.height / 2 // we want to make sure we're handling the center of the spaceship image
+    );
   }
 
   move(play, direction) {
@@ -37,13 +48,40 @@ class GameObject {
 
     operations[direction]();
   }
+
+  getBoundaries(play) {
+    const clampedX = Mathf.clamp(
+      this.position.x,
+      play.boundaries.left,
+      play.boundaries.right
+    );
+    const clampedY = Mathf.clamp(
+      this.position.y,
+      play.boundaries.top,
+      play.boundaries.bottom
+    );
+
+    return {
+      clampedX,
+      clampedY,
+    };
+  }
 }
 
 class Spaceship extends GameObject {
   constructor(x, y, moveSpeed) {
     super(x, y, moveSpeed);
 
-    this.image.src = 'images/spaceship.png';
+    this.setImage('images/spaceship.png');
+  }
+
+  draw(play) {
+    this.drawImage(play);
+  }
+
+  update(play) {
+    this.handleMovement(play);
+    this.handleShoot(play, play.currentScene());
   }
 
   handleShoot(play, scene) {
@@ -84,17 +122,7 @@ class Spaceship extends GameObject {
   }
 
   keepInBoundaries(play) {
-    const clampedX = Mathf.clamp(
-      this.position.x,
-      play.boundaries.left,
-      play.boundaries.right
-    );
-    const clampedY = Mathf.clamp(
-      this.position.y,
-      play.boundaries.top,
-      play.boundaries.bottom
-    );
-
+    const { clampedX, clampedY } = this.getBoundaries(play);
     this.position.x = clampedX;
     this.position.y = clampedY; // don't actually need this clampedY because we're not moving up and down we're only moving left and right check handleMovement()
   }
@@ -114,11 +142,55 @@ class Bullet extends GameObject {
 
   fire(play, index) {
     this.move(play, 'up'); // move() derived from GameObject super class
+    this.removeIfCollidedWithTopBoundary(play, index);
+  }
 
+  removeIfCollidedWithTopBoundary(play, index) {
     // if the bullet is out of the canvas, remove it from the bullets array
     // in canvas the top left corner is 0,0
     if (this.position.y < 0) {
       play.currentScene().bullets.splice(index, 1);
+    }
+  }
+}
+
+class Ufo extends GameObject {
+  constructor(x, y, moveSpeed, row, column) {
+    super(x, y, moveSpeed);
+    this.turnAround = 1;
+    this.row = row;
+    this.column = column;
+
+    this.setImage('images/ufo.png');
+  }
+
+  draw() {
+    this.drawImage();
+  }
+
+  update(play, levelMoveSpeed) {
+    this.position.x +=
+      levelMoveSpeed * play.settings.updateSeconds * this.turnAround;
+
+    this.onBoundaryCollision(play);
+    // this.keepInBoundaries(play);
+  }
+
+  // if the ufo is on the boundary, turn around
+  onBoundaryCollision(play) {
+    const { clampedX } = this.getBoundaries(play);
+
+    /* clampedX is the x position of the ufo after it has been clamped to the boundaries of the canvas
+       if the ufo is on the left boundary, clampedX will be equal to the left boundary
+       if the ufo is on the right boundary, clampedX will be equal to the right boundary
+       if the ufo is not on the boundary, clampedX will be equal to the ufo's current x position */
+
+    if (clampedX === play.boundaries.right) {
+      // if the ufo is on the right boundary, turn around (start moving left)
+      this.turnAround *= -1;
+    } else if (clampedX === play.boundaries.left) {
+      // if the ufo is on the left boundary, turn around (start moving right)
+      this.turnAround *= 1;
     }
   }
 }
