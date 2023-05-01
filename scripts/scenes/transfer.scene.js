@@ -21,7 +21,7 @@ class TransferScene extends Scene {
   }
 
   update() {
-    super.update();
+    // super.update();
     // console.log('frames elapsed', this.framesElapsed); // value inherited from super does not need to be declared in constructor
     // 2s 60fps -> 120fps = 2s
     // this.framesElapsed++;
