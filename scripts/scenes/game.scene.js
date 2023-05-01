@@ -10,6 +10,7 @@ class GameScene extends Scene {
     this.lastBulletTime = null;
     this.ufos = []; // enemies
     this.ufoSpeed = settings.ufoSpeed;
+    this.ufoTurnAround = 1;
   }
 
   awake(play) {
@@ -22,6 +23,9 @@ class GameScene extends Scene {
     // create enemies
     this.spawnUfos(play);
 
+    // bind the handleResize method to this object
+    // doing this so that this isn't referring to the window object when we call the handleResize method
+    this.handleResize = this.handleResize.bind(this);
     window.addEventListener('resize', this.handleResize, true);
   }
 
@@ -34,9 +38,7 @@ class GameScene extends Scene {
     });
 
     // move enemies
-    this.ufos.forEach((ufo) => {
-      ufo.update(play, this.ufoSpeed);
-    });
+    this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
   }
 
   destroy() {
@@ -59,6 +61,16 @@ class GameScene extends Scene {
     });
   }
 
+  handleMoveUfo(ufo, play) {
+    const newX = ufo.move(play, this.ufoTurnAround);
+
+    const { clampedX } = ufo.getBoundaries(play);
+
+    if (newX !== clampedX) {
+      this.ufoTurnAround *= -1;
+    }
+  }
+
   spawnUfos(play) {
     this.ufoSpeed = play.settings.ufoSpeed + this.level * 7; // increase the speed of the ufos by 7 for each level
     const maxRows = play.settings.ufoRows;
@@ -67,6 +79,8 @@ class GameScene extends Scene {
 
     let currentRow, currentColumn;
 
+    // we're going to have 4 columns and 4 lines,
+    // each enemy is 32px wide and 24px tall
     for (currentRow = 0; currentRow < maxRows; currentRow++) {
       for (currentColumn = 0; currentColumn < maxColumns; currentColumn++) {
         let x, y;
@@ -87,11 +101,14 @@ class GameScene extends Scene {
   }
 
   handleResize() {
-    // can't pass play to this function to get current scene because the removeEventListener will not work so using global currentScene from window
-    window.currentScene.spaceship.position.x = play.width / 2;
-    window.currentScene.spaceship.position.y = play.boundaries.bottom;
-  }
+    this.spaceship.position.x = play.width / 2;
+    this.spaceship.position.y = play.boundaries.bottom;
 
-  // we're going to have 4 columns and 4 lines,
-  // each enemy is 32px wide and 24px tall
+    this.ufos.forEach((ufo) => {
+      const { clampedX, clampedY } = ufo.getBoundaries(play);
+
+      ufo.position.x = clampedX;
+      ufo.position.y = clampedY;
+    });
+  }
 }

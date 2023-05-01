@@ -107,7 +107,6 @@ class GameBasics {
   }
 
   pushScene(scene) {
-    window.currentScene = scene;
     this.scenesContainer.push(scene);
   }
 

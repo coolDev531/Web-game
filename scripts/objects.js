@@ -157,7 +157,6 @@ class Bullet extends GameObject {
 class Ufo extends GameObject {
   constructor(x, y, moveSpeed, row, column) {
     super(x, y, moveSpeed);
-    this.turnAround = 1;
     this.row = row;
     this.column = column;
 
@@ -168,32 +167,8 @@ class Ufo extends GameObject {
     this.drawImage();
   }
 
-  update(play, levelMoveSpeed) {
-    this.position.x +=
-      levelMoveSpeed * play.settings.updateSeconds * this.turnAround;
-
-    this.onBoundaryCollision(play);
-    // this.keepInBoundaries(play);
-  }
-
-  // if the ufo is on the boundary, turn around
-  onBoundaryCollision(play) {
-    const { clampedX } = this.getBoundaries(play);
-
-    /* clampedX is the x position of the ufo after it has been clamped to the boundaries of the canvas
-       if the ufo is on the left boundary, clampedX will be equal to the left boundary
-       if the ufo is on the right boundary, clampedX will be equal to the right boundary
-       if the ufo is not on the boundary, clampedX will be equal to the ufo's current x position
-    */
-
-    /* why are we comparing clamedX with this.position.x?
-       because we want to know if the ufo is on the boundary
-       if the ufo is on the boundary, clampedX will be different from this.position.x
-       if the ufo is not on the boundary, clampedX will be equal to this.position.x 
-    */
-
-    if (clampedX !== this.position.x) {
-      this.turnAround *= -1;
-    }
+  move(play, turnAround) {
+    return (this.position.x +=
+      this.moveSpeed * play.settings.updateSeconds * turnAround);
   }
 }
