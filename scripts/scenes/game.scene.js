@@ -23,6 +23,11 @@ class GameScene extends Scene {
     // create enemies
     this.spawnUfos(play);
 
+    this.horizontalMoving = 1;
+    this.verticalMoving = 0;
+    this.ufosAreSinking = false;
+    this.currentUfoSinkingValue = 0;
+
     // bind the handleResize method to this object
     // doing this so that this isn't referring to the window object when we call the handleResize method
     this.handleResize = this.handleResize.bind(this);
@@ -39,6 +44,7 @@ class GameScene extends Scene {
 
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
+    this.handleUfosSinking();
   }
 
   destroy() {
@@ -62,12 +68,37 @@ class GameScene extends Scene {
   }
 
   handleMoveUfo(ufo, play) {
-    const newX = ufo.move(play, this.ufoTurnAround);
+    // const newX = ufo.move(play, this.ufoTurnAround);
+    const { newX, newY, reachedLeftOrRightBoundary } = ufo.getNextPosition(
+      play,
+      this.ufoTurnAround,
+      this.horizontalMoving,
+      this.verticalMoving
+    );
 
-    const { clampedX } = ufo.getBoundaries(play);
-
-    if (newX !== clampedX) {
+    if (reachedLeftOrRightBoundary) {
       this.ufoTurnAround *= -1;
+      this.horizontalMoving = 0;
+      this.verticalMoving = 1;
+      this.ufosAreSinking = true;
+    }
+
+    ufo.position.x = newX;
+    ufo.position.y = newY;
+  }
+
+  handleUfosSinking() {
+    if (this.ufosAreSinking) {
+      this.currentUfoSinkingValue +=
+        this.ufoSpeed * this.settings.updateSeconds;
+
+      if (this.currentUfoSinkingValue >= this.settings.ufoSinkingValue) {
+        // this is when the ufos have already sunk the amount of pixels we wanted them to sink
+        this.ufosAreSinking = false;
+        this.currentUfoSinkingValue = 0;
+        this.verticalMoving = 0;
+        this.horizontalMoving = 1;
+      }
     }
   }
 

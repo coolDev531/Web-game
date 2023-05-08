@@ -171,4 +171,26 @@ class Ufo extends GameObject {
     return (this.position.x +=
       this.moveSpeed * play.settings.updateSeconds * turnAround);
   }
+
+  getNextPosition(play, ufoTurnAround, horizontalMoving, verticalMoving) {
+    const { updateSeconds } = play.settings;
+
+    const newX =
+      this.position.x +
+      this.moveSpeed * updateSeconds * ufoTurnAround * horizontalMoving;
+
+    const newY =
+      this.position.y + this.moveSpeed * updateSeconds * verticalMoving;
+
+    const reachedLeftOrRightBoundary =
+      newX >= play.boundaries.right || newX <= play.boundaries.left;
+
+    return {
+      newX,
+      newY,
+      horizontalMoving,
+      verticalMoving,
+      reachedLeftOrRightBoundary,
+    };
+  }
 }

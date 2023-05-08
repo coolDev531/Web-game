@@ -78,6 +78,7 @@ class GameBasics {
       ufoRows: 4,
       ufoColumns: 8,
       ufoSpeed: 35,
+      ufoSinkingValue: 30, // how many pixels the ufo will sink when it reaches the boundaries
     };
 
     // we collect here the different scenes, states of the game
@@ -123,9 +124,7 @@ class GameBasics {
     this.goToScene(new OpeningScene());
 
     const sixtyFps = this.settings.updateSeconds * 1000; // 16.66666667ms
-    setInterval(() => {
-      gameLoop(this);
-    }, sixtyFps); // convert to ms
+    setInterval(() => gameLoop(this), sixtyFps); // convert to ms
 
     // devTools
     window.goToScene = (sceneKey) => {
@@ -155,15 +154,8 @@ function gameLoop(play) {
     return;
   }
 
-  // update
-  if (currentScene.update) {
-    currentScene.update(play);
-  }
-
-  // draw
-  if (currentScene.draw) {
-    currentScene.draw(play);
-  }
+  currentScene.update?.(play);
+  currentScene.draw?.(play);
 }
 
 function addEventListeners(play) {
