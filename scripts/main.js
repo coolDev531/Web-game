@@ -136,6 +136,10 @@ class GameBasics {
     };
   }
 
+  gameOver() {
+    this.goToScene(new OpeningScene());
+  }
+
   onKeyDown(keyCode) {
     this.pressedKeys[keyCode] = true;
 

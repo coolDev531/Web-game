@@ -54,7 +54,8 @@ class GameScene extends Scene {
     this.handleUfosSinking();
     const frontLineUfos = this.getFrontLineUfos();
     this.handleDropBombs(frontLineUfos);
-    this.detectBulletCollision(play);
+    this.detectUfoCollision(play);
+    this.detectSpaceshipCollision(play);
   }
 
   destroy() {
@@ -192,15 +193,35 @@ class GameScene extends Scene {
     });
   }
 
-  detectBulletCollision(play) {
+  detectUfoCollision(play) {
     this.ufos.forEach((ufo, ufoIndex) => {
       this.bullets.forEach((bullet, bulletIndex) => {
-        ufo.onCollision(bullet, () => {
+        bullet.onCollision(ufo, () => {
           this.ufos.splice(ufoIndex, 1);
           this.bullets.splice(bulletIndex, 1);
           play.score += 100;
         });
       });
+    });
+  }
+
+  // detect if the spaceship has been hit by a bomb
+  detectSpaceshipCollision(play) {
+    this.bombs.forEach((bomb, bombIndex) => {
+      bomb.onCollision(
+        this.spaceship,
+        () => {
+          this.bombs.splice(bombIndex, 1);
+
+          // game over
+          play.gameOver();
+        },
+        {
+          leftPadding: 2,
+          rightPadding: -2,
+          topPadding: 6,
+        }
+      );
     });
   }
 }

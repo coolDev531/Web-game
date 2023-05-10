@@ -49,17 +49,31 @@ class GameObject {
     operations[direction]();
   }
 
-  isCollisionWith(gameObject) {
-    const left = gameObject.position.x >= this.position.x - this.width / 2;
-    const right = gameObject.position.x <= this.position.x + this.width / 2;
-    const top = gameObject.position.y >= this.position.y - this.height / 2;
-    const bottom = gameObject.position.y <= this.position.y + this.height / 2;
+  isCollisionWith(
+    gameObject,
+    { topPadding = 0, rightPadding = 0, leftPadding = 0 }
+  ) {
+    const left =
+      this.position.x + leftPadding >=
+      gameObject.position.x - gameObject.width / 2;
+    const right =
+      this.position.x + rightPadding <=
+      gameObject.position.x + gameObject.width / 2;
+    const top =
+      this.position.y + topPadding >=
+      gameObject.position.y - gameObject.height / 2;
+    const bottom =
+      this.position.y <= gameObject.position.y + gameObject.height / 2;
 
     return left && right && top && bottom;
   }
 
-  onCollision(gameObject, callback) {
-    if (this.isCollisionWith(gameObject)) {
+  onCollision(
+    gameObject,
+    callback,
+    paddingOptions = { topPadding: 0, rightPadding: 0, leftPadding: 0 }
+  ) {
+    if (this.isCollisionWith(gameObject, paddingOptions)) {
       callback();
     }
   }
