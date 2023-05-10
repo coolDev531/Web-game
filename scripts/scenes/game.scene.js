@@ -11,6 +11,8 @@ class GameScene extends Scene {
     this.ufos = []; // enemies
     this.ufoSpeed = settings.ufoSpeed;
     this.ufoTurnAround = 1;
+    this.bombs = [];
+    this.bombFrequency = settings.bombFrequency;
   }
 
   awake(play) {
@@ -45,7 +47,8 @@ class GameScene extends Scene {
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
     this.handleUfosSinking();
-    this.setFrontLineUfos();
+    const frontLineUfos = this.getFrontLineUfos();
+    this.handleDropBombs(frontLineUfos);
   }
 
   destroy() {
@@ -105,6 +108,9 @@ class GameScene extends Scene {
 
   spawnUfos(play) {
     this.ufoSpeed = play.settings.ufoSpeed + this.level * 7; // increase the speed of the ufos by 7 for each level
+    this.bombSpeed = play.settings.bombSpeed + this.level * 10; // increase the speed of the bombs by 10 for each level
+    this.bombFrequency = play.settings.bombFrequency + this.level * 0.05; // increase the frequency of the bombs by 0.05 for each level
+
     const maxRows = play.settings.ufoRows;
     const maxColumns = play.settings.ufoColumns;
     const initialUfos = [];
@@ -134,7 +140,7 @@ class GameScene extends Scene {
 
   // ufos bombing
   // Sorting UFOs - which are at the bottom of each column
-  setFrontLineUfos() {
+  getFrontLineUfos() {
     const frontLineUfos = [];
     this.ufos.forEach((ufo) => {
       if (
@@ -147,6 +153,20 @@ class GameScene extends Scene {
     });
 
     return frontLineUfos;
+  }
+
+  // ufos bombing
+  // Bombing
+  handleDropBombs(frontLineUfos) {
+    frontLineUfos.forEach((ufo) => {
+      let chance = this.bombFrequency * this.settings.updateSeconds;
+      if (chance > Math.random()) {
+        // make the ufo drop a bomb
+        const bombX = ufo.position.x;
+        const bombY = ufo.position.y + ufo.height / 2;
+        this.bombs.push(new Bomb(bombX, bombY, this.bombSpeed));
+      }
+    });
   }
 
   handleResize() {

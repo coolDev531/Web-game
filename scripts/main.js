@@ -79,6 +79,9 @@ class GameBasics {
       ufoColumns: 8,
       ufoSpeed: 35,
       ufoSinkingValue: 30, // how many pixels the ufo will sink when it reaches the boundaries
+
+      bombSpeed: 75,
+      bombFrequency: 0.05, // how often the ufos will drop bombs
     };
 
     // we collect here the different scenes, states of the game

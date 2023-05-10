@@ -194,3 +194,10 @@ class Ufo extends GameObject {
     };
   }
 }
+
+// the bomb dropped by the ufo
+class Bomb extends GameObject {
+  constructor(x, y, moveSpeed) {
+    super(x, y, moveSpeed);
+  }
+}
