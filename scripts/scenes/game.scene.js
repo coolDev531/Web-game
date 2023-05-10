@@ -45,6 +45,7 @@ class GameScene extends Scene {
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
     this.handleUfosSinking();
+    this.setFrontLineUfos();
   }
 
   destroy() {
@@ -129,6 +130,23 @@ class GameScene extends Scene {
     }
 
     this.ufos = initialUfos;
+  }
+
+  // ufos bombing
+  // Sorting UFOs - which are at the bottom of each column
+  setFrontLineUfos() {
+    const frontLineUfos = [];
+    this.ufos.forEach((ufo) => {
+      if (
+        !frontLineUfos[ufo.column] ||
+        frontLineUfos[ufo.column].row < ufo.row
+      ) {
+        // this means that we don't have an ufo in that column or the ufo that we have in that column is behind the current ufo
+        frontLineUfos[ufo.column] = ufo;
+      }
+    });
+
+    return frontLineUfos;
   }
 
   handleResize() {
