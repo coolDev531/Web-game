@@ -49,6 +49,21 @@ class GameObject {
     operations[direction]();
   }
 
+  isCollisionWith(gameObject) {
+    const left = gameObject.position.x >= this.position.x - this.width / 2;
+    const right = gameObject.position.x <= this.position.x + this.width / 2;
+    const top = gameObject.position.y >= this.position.y - this.height / 2;
+    const bottom = gameObject.position.y <= this.position.y + this.height / 2;
+
+    return left && right && top && bottom;
+  }
+
+  onCollision(gameObject, callback) {
+    if (this.isCollisionWith(gameObject)) {
+      callback();
+    }
+  }
+
   getBoundaries(play) {
     const clampedX = Mathf.clamp(
       this.position.x,

@@ -54,6 +54,7 @@ class GameScene extends Scene {
     this.handleUfosSinking();
     const frontLineUfos = this.getFrontLineUfos();
     this.handleDropBombs(frontLineUfos);
+    this.detectBulletCollision(play);
   }
 
   destroy() {
@@ -188,6 +189,18 @@ class GameScene extends Scene {
 
       ufo.position.x = clampedX;
       ufo.position.y = clampedY;
+    });
+  }
+
+  detectBulletCollision(play) {
+    this.ufos.forEach((ufo, ufoIndex) => {
+      this.bullets.forEach((bullet, bulletIndex) => {
+        ufo.onCollision(bullet, () => {
+          this.ufos.splice(ufoIndex, 1);
+          this.bullets.splice(bulletIndex, 1);
+          play.score += 100;
+        });
+      });
     });
   }
 }
