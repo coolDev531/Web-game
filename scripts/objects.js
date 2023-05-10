@@ -128,6 +128,8 @@ class Spaceship extends GameObject {
       this.position.y - this.height / 2,
       play.settings.bulletSpeed
     );
+
+    play.soundsController.playSound('shot');
     scene.bullets.push(bullet);
     scene.lastBulletTime = new Date().getTime();
   }

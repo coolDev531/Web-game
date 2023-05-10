@@ -220,6 +220,7 @@ function addEventListeners(play) {
 }
 
 const play = new GameBasics(canvas);
+play.soundsController = new SoundsController();
 play.start();
 
 function selectScene(key) {
