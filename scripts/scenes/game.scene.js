@@ -44,6 +44,11 @@ class GameScene extends Scene {
       bullet.fire(play, index);
     });
 
+    // move bombs
+    this.bombs.forEach((bomb, index) => {
+      bomb.drop(play, index);
+    });
+
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
     this.handleUfosSinking();
@@ -68,6 +73,11 @@ class GameScene extends Scene {
     // draw enemies
     this.ufos.forEach((ufo) => {
       ufo.draw();
+    });
+
+    // draw bombs
+    this.bombs.forEach((bomb) => {
+      bomb.draw();
     });
   }
 

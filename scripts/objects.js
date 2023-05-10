@@ -200,4 +200,20 @@ class Bomb extends GameObject {
   constructor(x, y, moveSpeed) {
     super(x, y, moveSpeed);
   }
+
+  draw(play) {
+    ctx.fillStyle = '#FE2EF7';
+    ctx.fillRect(this.position.x - 2, this.position.y, 4, 6);
+  }
+
+  drop(play, index) {
+    this.move(play, 'down'); // move() derived from GameObject super class
+    this.removeIfCollidedWithBottomBoundary(play, index);
+  }
+
+  removeIfCollidedWithBottomBoundary(play, index) {
+    if (this.position.y > play.height) {
+      play.currentScene().bombs.splice(index, 1);
+    }
+  }
 }
