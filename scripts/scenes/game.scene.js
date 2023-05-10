@@ -200,6 +200,7 @@ class GameScene extends Scene {
           this.ufos.splice(ufoIndex, 1);
           this.bullets.splice(bulletIndex, 1);
           play.score += 100;
+          play.soundsController.playSound('ufoDeath');
         });
       });
     });
@@ -212,6 +213,8 @@ class GameScene extends Scene {
         this.spaceship,
         () => {
           this.bombs.splice(bombIndex, 1);
+
+          play.soundsController.playSound('explosion');
 
           // game over
           play.gameOver();

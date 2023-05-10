@@ -3,23 +3,19 @@ class SoundsController {
     this.sounds = {
       shot: new Sound('shot.mp3', true),
       explosion: new Sound('explosion.mp3'),
-      ufoDeath: new Sound('ufoDeath.mp3'),
+      ufoDeath: new Sound('ufoDeath.mp3', true),
     };
   }
-
-  init(fileName) {}
-
-  mute() {}
 
   playSound(key) {
     const sound = this.sounds[key];
     sound.play();
 
-    sound.reset();
-
     if (sound.isSpammable) {
       sound.setToRandomPitch();
     }
+
+    sound.reset();
   }
 }
 
@@ -41,7 +37,7 @@ class Sound {
 
   setToRandomPitch() {
     const min = 0.9;
-    const max = 1.1;
+    const max = 1.3;
     this.audio.playbackRate = Math.random() * (max - min) + min;
   }
 }
