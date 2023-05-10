@@ -17,6 +17,12 @@ class SoundsController {
 
     sound.reset();
   }
+
+  mute() {
+    Object.values(this.sounds).forEach((sound) => {
+      sound.audio.muted = !sound.audio.muted;
+    });
+  }
 }
 
 class Sound {

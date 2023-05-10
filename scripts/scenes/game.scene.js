@@ -227,4 +227,10 @@ class GameScene extends Scene {
       );
     });
   }
+
+  onKeyDown(play, keyCode) {
+    if (keyCode === 'KeyM') {
+      play.soundsController.mute();
+    }
+  }
 }
