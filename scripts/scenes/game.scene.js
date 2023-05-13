@@ -232,5 +232,10 @@ class GameScene extends Scene {
     if (keyCode === 'KeyM') {
       play.soundsController.mute();
     }
+
+    if (keyCode === 'Escape') {
+      // not using goToScene because goToScene() clears the stack and we want to keep the current game scene in the stack
+      play.pushScene(new PauseScene());
+    }
   }
 }

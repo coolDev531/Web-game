@@ -17,7 +17,7 @@ class Stack {
     if (this.count === 0) return undefined;
     let deleteItem = this.items[this.count - 1];
     this.count -= 1;
-    console.log(`${deleteItem} removed`);
+    // console.log(`${deleteItem} removed`);
     return deleteItem;
   }
 

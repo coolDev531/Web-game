@@ -115,6 +115,7 @@ class GameBasics {
   }
 
   popScene() {
+    // pop in a stack removes the top element so it's the current scene
     this.scenesContainer.pop();
   }
 
@@ -204,8 +205,6 @@ function addEventListeners(play) {
     if (
       keyCode === 'ArrowLeft' ||
       keyCode === 'ArrowRight' ||
-      keyCode === 'KeyA' ||
-      keyCode === 'KeyD' ||
       keyCode === 'Space'
     ) {
       // Prevent the event from triggering browser navigation shortcuts like Back
