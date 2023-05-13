@@ -226,7 +226,11 @@ class GameScene extends Scene {
           play.soundsController.playSound('explosion');
 
           // game over
-          play.gameOver();
+          if (play.shields === 0) {
+            play.gameOver();
+          }
+
+          play.shields -= 1;
         },
         {
           leftPadding: 2,
@@ -289,5 +293,26 @@ class GameScene extends Scene {
     ctx.fillText('Level', play.boundaries.left, play.boundaries.top - 75);
     ctx.font = 'bold 30px Comic Sans MS';
     ctx.fillText(this.level, play.boundaries.left, play.boundaries.top - 25);
+
+    ctx.textAlign = 'center';
+    // shields
+    if (play.shields > 0) {
+      ctx.fillStyle = '#BDBDBD';
+      ctx.font = 'bold 24px Comic Sans MS';
+      ctx.fillText('Shields', play.width / 2, play.boundaries.top - 75);
+      ctx.font = 'bold 30px Comic Sans MS';
+      ctx.fillText(play.shields, play.width / 2, play.boundaries.top - 25);
+    } else {
+      ctx.fillStyle = '#ff4d4d';
+      ctx.font = 'bold 24px Comic Sans MS';
+      ctx.fillText('WARNING', play.width / 2, play.boundaries.top - 75);
+
+      ctx.fillStyle = '#BDBDBD';
+      ctx.fillText(
+        'No shields left!',
+        play.width / 2,
+        play.boundaries.top - 25
+      );
+    }
   }
 }
