@@ -4,7 +4,7 @@ class GameOverScene extends Scene {
   }
 
   draw(play) {
-    ctx.clearRect(0, 0, play.width, play.height);
+    super.draw(play);
     ctx.font = '40px Comic Sans MS';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#ffffff';
