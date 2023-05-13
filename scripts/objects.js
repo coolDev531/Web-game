@@ -6,16 +6,13 @@ class GameObject {
     };
 
     this.moveSpeed = moveSpeed;
-
-    this.width = null;
-    this.height = null;
   }
 
-  setImage(src) {
+  setImage(src, { width, height } = {}) {
     this.image = new Image();
     this.image.onload = () => {
-      this.width = this.image.naturalWidth;
-      this.height = this.image.naturalHeight;
+      this.width = width || this.image.naturalWidth;
+      this.height = height || this.image.naturalHeight;
     };
     this.image.src = src;
   }
@@ -24,7 +21,9 @@ class GameObject {
     ctx.drawImage(
       this.image,
       this.position.x - this.width / 2, // we want to make sure we're handling the center of the spaceship image and not the top left corner
-      this.position.y - this.height / 2 // we want to make sure we're handling the center of the spaceship image
+      this.position.y - this.height / 2, // we want to make sure we're handling the center of the spaceship image
+      this.width,
+      this.height
     );
   }
 
