@@ -82,6 +82,8 @@ class GameBasics {
 
       bombSpeed: 75,
       bombFrequency: 0.05, // how often the ufos will drop bombs
+
+      pointsPerUfo: 25,
     };
 
     // we collect here the different scenes, states of the game

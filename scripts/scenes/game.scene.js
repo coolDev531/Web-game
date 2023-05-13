@@ -56,6 +56,12 @@ class GameScene extends Scene {
     this.handleDropBombs(frontLineUfos);
     this.detectUfoCollision(play);
     this.detectSpaceshipCollision(play);
+
+    if (this.ufos.length === 0) {
+      console.log(`Level ${play.level} completed!`);
+      play.level += 1;
+      play.goToScene(new TransferScene(play.level));
+    }
   }
 
   destroy() {
@@ -82,6 +88,7 @@ class GameScene extends Scene {
       bomb.draw();
     });
 
+    this.drawHeader();
     this.drawFooter();
   }
 
@@ -201,7 +208,7 @@ class GameScene extends Scene {
         bullet.onCollision(ufo, () => {
           this.ufos.splice(ufoIndex, 1);
           this.bullets.splice(bulletIndex, 1);
-          play.score += 100;
+          play.score += play.settings.pointsPerUfo;
           play.soundsController.playSound('ufoDeath');
         });
       });
@@ -266,5 +273,21 @@ class GameScene extends Scene {
       play.boundaries.right,
       play.boundaries.bottom + 70
     );
+  }
+
+  drawHeader() {
+    // score
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#BDBDBD';
+    ctx.fontStyle = 'bold 24px Comic Sans MS';
+    ctx.fillText('Score', play.boundaries.right, play.boundaries.top - 75);
+    ctx.font = 'bold 30px Comic Sans MS';
+    ctx.fillText(play.score, play.boundaries.right, play.boundaries.top - 25);
+
+    // level
+    ctx.font = 'bold 24px Comic Sans MS';
+    ctx.fillText('Level', play.boundaries.left, play.boundaries.top - 75);
+    ctx.font = 'bold 30px Comic Sans MS';
+    ctx.fillText(this.level, play.boundaries.left, play.boundaries.top - 25);
   }
 }
