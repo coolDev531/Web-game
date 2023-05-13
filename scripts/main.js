@@ -41,7 +41,15 @@ function resize() {
   canvas.style.width = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
 
-  return { newWidth, newHeight };
+  play.width = newWidth;
+  play.height = newHeight;
+
+  play.boundaries = {
+    top: play.height * 0.2, // 20% of canvas height from top
+    bottom: play.height * 0.867, // 86.7% of canvas height from top
+    left: play.width * 0.111, // 11.1% of canvas width from left
+    right: play.width * 0.889, // 88.9% of canvas width from left
+  };
 }
 
 class GameBasics {
@@ -170,36 +178,10 @@ function gameLoop(play) {
 
 function addEventListeners(play) {
   // Call resize() when the page is loaded, to set the initial size of the canvas
-  window.addEventListener(
-    'load',
-    () => {
-      const { newWidth, newHeight } = resize();
-      play.width = newWidth;
-      play.height = newHeight;
-
-      play.boundaries = {
-        top: play.height * 0.2, // 20% of canvas height from top
-        bottom: play.height * 0.867, // 86.7% of canvas height from top
-        left: play.width * 0.111, // 11.1% of canvas width from left
-        right: play.width * 0.889, // 88.9% of canvas width from left
-      };
-    },
-    false
-  );
+  window.addEventListener('load', resize, false);
 
   // Call resize() whenever the window is resized, to update the size of the canvas
-  window.addEventListener('resize', () => {
-    const { newWidth, newHeight } = resize();
-    play.width = newWidth;
-    play.height = newHeight;
-
-    play.boundaries = {
-      top: play.height * 0.2, // 20% of canvas height from top
-      bottom: play.height * 0.867, // 86.7% of canvas height from top
-      left: play.width * 0.111, // 11.1% of canvas width from left
-      right: play.width * 0.889, // 88.9% of canvas width from left
-    };
-  });
+  window.addEventListener('resize', resize);
 
   window.addEventListener('keydown', (e) => {
     const keyCode = e.code;
