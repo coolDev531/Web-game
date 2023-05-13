@@ -20,8 +20,12 @@ class SoundsController {
 
   mute() {
     Object.values(this.sounds).forEach((sound) => {
-      sound.audio.muted = !sound.audio.muted;
+      sound.audio.muted = !sound?.audio?.muted;
     });
+  }
+
+  isMuted() {
+    return Object.values(this.sounds).every((sound) => sound?.audio?.muted);
   }
 }
 

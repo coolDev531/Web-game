@@ -81,6 +81,8 @@ class GameScene extends Scene {
     this.bombs.forEach((bomb) => {
       bomb.draw();
     });
+
+    this.drawFooter();
   }
 
   handleMoveUfo(ufo, play) {
@@ -237,5 +239,32 @@ class GameScene extends Scene {
       // not using goToScene because goToScene() clears the stack and we want to keep the current game scene in the stack
       play.pushScene(new PauseScene());
     }
+  }
+
+  drawFooter() {
+    ctx.font = '16px Comic Sans MS';
+    ctx.fillStyle = '#424242';
+    ctx.textAlign = 'left';
+    ctx.fillText(
+      `Press M to switch sound ON/OFF.  Sound:`,
+      play.boundaries.left,
+      play.boundaries.bottom + 70
+    );
+
+    const soundStatus = play.soundsController.isMuted() ? 'OFF' : 'ON';
+    ctx.fillStyle = play.soundsController.isMuted() ? '#ff0000' : '#00ff00';
+    ctx.fillText(
+      soundStatus,
+      play.boundaries.left + 375,
+      play.boundaries.bottom + 70
+    );
+
+    ctx.fillStyle = '#424242';
+    ctx.textAlign = 'right';
+    ctx.fillText(
+      'Press ESC to Pause.',
+      play.boundaries.right,
+      play.boundaries.bottom + 70
+    );
   }
 }
