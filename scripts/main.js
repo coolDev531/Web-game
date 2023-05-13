@@ -148,7 +148,7 @@ class GameBasics {
   }
 
   gameOver() {
-    this.goToScene(new OpeningScene());
+    this.goToScene(new GameOverScene());
   }
 
   onKeyDown(keyCode) {

@@ -53,7 +53,7 @@ class PauseScene extends Scene {
     }
 
     if (keyCode === 'Enter') {
-      play.goToScene(new OpeningScene());
+      play.goToScene(new GameOverScene());
     }
   }
 }

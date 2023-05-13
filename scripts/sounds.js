@@ -2,7 +2,7 @@ class SoundsController {
   constructor() {
     this.sounds = {
       shot: new Sound('shot.mp3', true),
-      explosion: new Sound('explosion.mp3'),
+      explosion: new Sound('explosion.mp3', true, 0.5),
       ufoDeath: new Sound('ufoDeath.mp3', true),
     };
   }
@@ -30,10 +30,11 @@ class SoundsController {
 }
 
 class Sound {
-  constructor(fileName, isSpammable = false) {
+  constructor(fileName, isSpammable = false, volume = 1) {
     this.audio = new Audio();
     this.audio.src = `../sounds/${fileName}`;
     this.audio.setAttribute('preload', 'auto');
+    this.audio.volume = volume;
     this.isSpammable = isSpammable;
   }
 
