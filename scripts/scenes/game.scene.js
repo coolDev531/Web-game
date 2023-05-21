@@ -66,6 +66,7 @@ class GameScene extends Scene {
 
   destroy() {
     window.removeEventListener('resize', this.handleResize, true);
+    this.spaceship.removeEventListeners();
   }
 
   draw(play) {

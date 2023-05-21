@@ -202,6 +202,26 @@ function addEventListeners(play) {
     const keyCode = e.code;
     play.onKeyUp(keyCode);
   });
+
+  // mouse movement
+  window.addEventListener('mousemove', (e) => {
+    // Get the position of the mouse relative to the canvas
+    const mousePosition = getMousePosition(play.canvas, e);
+    const mouseX = mousePosition.x;
+    const mouseY = mousePosition.y;
+
+    play.mouse = {
+      isActive: true,
+      position: {
+        x: mouseX,
+        y: mouseY,
+      },
+    };
+  });
+
+  window.addEventListener('mouseout', () => {
+    play.mouse.isActive = false;
+  });
 }
 
 const play = new GameBasics(canvas);
@@ -215,4 +235,14 @@ function selectScene(key) {
     case 'game':
       return new GameScene(this.settings, 1);
   }
+}
+
+function getMousePosition(canvas, e) {
+  // Get the size of the canvas bounding rect
+  const rect = canvas.getBoundingClientRect();
+  // Return the mouse coordinates based on the canvas size and the position of the canvas on the screen
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  };
 }

@@ -101,6 +101,14 @@ class Spaceship extends GameObject {
     super(x, y, moveSpeed);
 
     this.setImage('images/spaceship.png');
+
+    window.addEventListener('mousedown', () => {
+      this.isMouseDown = true;
+    });
+
+    window.addEventListener('mouseup', () => {
+      this.isMouseDown = false;
+    });
   }
 
   draw(play) {
@@ -112,6 +120,16 @@ class Spaceship extends GameObject {
     this.handleShoot(play, play.currentScene());
   }
 
+  removeEventListeners() {
+    window.removeEventListener('mousedown', () => {
+      this.isMouseDown = true;
+    });
+
+    window.removeEventListener('mouseup', () => {
+      this.isMouseDown = false;
+    });
+  }
+
   handleShoot(play, scene) {
     // only allow shooting if the last bullet time is null or if the current time - last bullet time is greater than the max frequency
     const shootingEnabled =
@@ -119,7 +137,9 @@ class Spaceship extends GameObject {
       new Date().getTime() - scene.lastBulletTime >
         play.settings.bulletMaxFrequency;
 
-    if (!shootingEnabled || !play.pressedKeys['Space']) return;
+    const shotPressed = play.pressedKeys['Space'] || this.isMouseDown;
+
+    if (!shootingEnabled || !shotPressed) return;
 
     const bullet = new Bullet(
       this.position.x,
@@ -136,16 +156,25 @@ class Spaceship extends GameObject {
   handleMovement(play) {
     const pressedLeft =
       play.pressedKeys['ArrowLeft'] || play.pressedKeys['KeyA'];
-
-    if (pressedLeft) {
-      this.move(play, 'left'); // move() derived from GameObject super class
-    }
-
     const pressedRight =
       play.pressedKeys['ArrowRight'] || play.pressedKeys['KeyD'];
 
-    if (pressedRight) {
+    const mouseX = play.mouse.position.x;
+
+    if (pressedLeft) {
+      this.move(play, 'left'); // move() derived from GameObject super class
+    } else if (pressedRight) {
       this.move(play, 'right'); // move() derived from GameObject super class
+    } else if (play.mouse.isActive) {
+      // not pressing keys, move the spaceship with the mouse
+      // if the mouse is to the left of the spaceship, move left
+      const nextDirection = mouseX < this.position.x ? 'left' : 'right';
+
+      // dont move if the mouse is on the spaceship
+      if (Mathf.distance(mouseX, this.position.x) < 2.1) return;
+
+      // write code to handle that below
+      this.move(play, nextDirection);
     }
 
     this.keepInBoundaries(play);
