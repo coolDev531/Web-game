@@ -13,6 +13,7 @@ class GameScene extends Scene {
     this.ufoTurnAround = 1;
     this.bombs = [];
     this.bombFrequency = settings.bombFrequency;
+    this.coins = [];
   }
 
   awake(play) {
@@ -47,6 +48,10 @@ class GameScene extends Scene {
     // move bombs
     this.bombs.forEach((bomb, index) => {
       bomb.drop(play, index);
+    });
+
+    this.coins.forEach((coin, index) => {
+      coin.drop(play, index);
     });
 
     // move enemies
@@ -87,6 +92,10 @@ class GameScene extends Scene {
     // draw bombs
     this.bombs.forEach((bomb) => {
       bomb.draw();
+    });
+
+    this.coins.forEach((coin) => {
+      coin.draw();
     });
 
     this.drawHeader();
@@ -211,13 +220,21 @@ class GameScene extends Scene {
           this.bullets.splice(bulletIndex, 1);
           play.score += play.settings.pointsPerUfo;
           play.soundsController.playSound('ufoDeath');
+
+          // coindrop
+          if (Math.random() > 0.8) {
+            const coinY = ufo.position.y + ufo.height / 2;
+            this.coins.push(
+              new Coin(ufo.position.x, coinY, play.settings.coinSpeed)
+            );
+          }
         });
       });
     });
   }
 
-  // detect if the spaceship has been hit by a bomb
   detectSpaceshipCollision(play) {
+    // detect if the spaceship has been hit by a bomb
     this.bombs.forEach((bomb, bombIndex) => {
       bomb.onCollision(
         this.spaceship,
@@ -232,6 +249,23 @@ class GameScene extends Scene {
           }
 
           play.shields -= 1;
+        },
+        {
+          leftPadding: 2,
+          rightPadding: -2,
+          topPadding: 6,
+        }
+      );
+    });
+
+    // detect if the spaceship has been hit by a coin
+    this.coins.forEach((coin, coinIndex) => {
+      coin.onCollision(
+        this.spaceship,
+        () => {
+          this.coins.splice(coinIndex, 1);
+          play.score += 100;
+          play.soundsController.playSound('coin');
         },
         {
           leftPadding: 2,

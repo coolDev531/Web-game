@@ -15,6 +15,8 @@ class GameObject {
       this.height = height || this.image.naturalHeight;
     };
     this.image.src = src;
+    this.image.width = this.width;
+    this.image.height = this.height;
   }
 
   drawImage() {
@@ -273,6 +275,31 @@ class Bomb extends GameObject {
   removeIfCollidedWithBottomBoundary(play, index) {
     if (this.position.y > play.height) {
       play.currentScene().bombs.splice(index, 1);
+    }
+  }
+}
+
+class Coin extends GameObject {
+  constructor(x, y, moveSpeed) {
+    super(x, y, moveSpeed);
+    this.setImage('images/coin.png', {
+      width: 30,
+      height: 30,
+    });
+  }
+
+  draw(play) {
+    this.drawImage();
+  }
+
+  drop(play, index) {
+    this.move(play, 'down'); // move() derived from GameObject super class
+    this.removeIfCollidedWithBottomBoundary(play, index);
+  }
+
+  removeIfCollidedWithBottomBoundary(play, index) {
+    if (this.position.y > play.height) {
+      play.currentScene().coins.splice(index, 1);
     }
   }
 }

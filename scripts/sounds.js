@@ -4,6 +4,7 @@ class SoundsController {
       shot: new Sound('shot.mp3', true),
       explosion: new Sound('explosion.mp3', true, 0.5),
       ufoDeath: new Sound('ufoDeath.mp3', true),
+      coin: new Sound('coin.mp3', true, 0.5),
     };
   }
 

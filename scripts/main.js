@@ -92,6 +92,8 @@ class GameBasics {
       bombFrequency: 0.05, // how often the ufos will drop bombs
 
       pointsPerUfo: 25,
+
+      coinSpeed: 125,
     };
 
     // we collect here the different scenes, states of the game
@@ -156,7 +158,10 @@ class GameBasics {
 
     const currentScene = this.currentScene();
     if (currentScene?.onKeyDown) {
-      play.mouse.isActive = false; // deactivate mouse when pressing keys
+      if (play.mouse) {
+        play.mouse.isActive = false; // deactivate mouse when pressing keys
+      }
+
       currentScene.onKeyDown(this, keyCode);
     }
   }
