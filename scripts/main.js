@@ -156,6 +156,7 @@ class GameBasics {
 
     const currentScene = this.currentScene();
     if (currentScene?.onKeyDown) {
+      play.mouse.isActive = false; // deactivate mouse when pressing keys
       currentScene.onKeyDown(this, keyCode);
     }
   }
