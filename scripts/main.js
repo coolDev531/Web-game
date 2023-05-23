@@ -18,15 +18,23 @@ function resize() {
   let width, height;
 
   if (windowRatio > canvasRatio) {
-    height = windowHeight;
+    // If the window's aspect ratio is greater than the canvas's aspect ratio,
+    // it means that the available width is more constrained than the height.
+    height = windowHeight; // Set the height to match the window height
+
+    // Calculate the corresponding width by multiplying the height by the canvas's aspect ratio
     width = height * canvasRatio;
   } else {
-    width = windowWidth;
+    // If the window's aspect ratio is less than or equal to the canvas's aspect ratio,
+    // it means that the available height is more constrained than the width.
+    width = windowWidth; // Set the width to match the window width
+
+    // Calculate the corresponding height by dividing the width by the canvas's aspect ratio
     height = width / canvasRatio;
   }
 
-  canvas.style.width = width + 'px';
-  canvas.style.height = height + 'px';
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
 
   play.boundaries = {
     top: play.height * 0.2, // 20% of canvas height from top
@@ -36,7 +44,7 @@ function resize() {
   };
 }
 
-class GameBasics {
+class GameController {
   constructor(canvas) {
     this.canvas = canvas;
     this.width = canvas.width;
@@ -125,17 +133,6 @@ class GameBasics {
 
     const sixtyFps = this.settings.updateSeconds * 1000; // 16.66666667ms
     setInterval(() => gameLoop(this), sixtyFps); // convert to ms
-
-    // devTools
-    window.goToScene = (sceneKey) => {
-      const scene = selectScene(sceneKey);
-      this.goToScene(scene);
-    };
-
-    window.nextLevel = () => {
-      this.level++;
-      this.goToScene(new TransferScene(this.level));
-    };
   }
 
   gameOver() {
@@ -219,18 +216,9 @@ function addEventListeners(play) {
   });
 }
 
-const play = new GameBasics(canvas);
+const play = new GameController(canvas);
 play.soundsController = new SoundsController();
 play.start();
-
-function selectScene(key) {
-  switch (key) {
-    case 'opening':
-      return new OpeningScene();
-    case 'game':
-      return new GameScene(this.settings, 1);
-  }
-}
 
 function getMousePosition(canvas, e) {
   const rect = canvas.getBoundingClientRect();
