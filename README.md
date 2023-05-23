@@ -9,3 +9,4 @@
 ## 5-23-2023
 
 - added coin drops
+- added different ufo sprite for odd levels

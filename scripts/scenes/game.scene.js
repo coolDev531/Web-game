@@ -157,7 +157,7 @@ class GameScene extends Scene {
         y = play.boundaries.top + 30 + currentRow * 30; // the distance is going to be 30 pixels between the ufos on the vertical axis
 
         initialUfos.push(
-          new Ufo(x, y, this.ufoSpeed, currentRow, currentColumn)
+          new Ufo(x, y, this.ufoSpeed, currentRow, currentColumn, this.level)
         );
 
         // console.log(
@@ -222,7 +222,7 @@ class GameScene extends Scene {
           play.soundsController.playSound('ufoDeath');
 
           // coindrop
-          if (Math.random() > 0.8) {
+          if (Math.random() > 0.75) {
             const coinY = ufo.position.y + ufo.height / 2;
             this.coins.push(
               new Coin(ufo.position.x, coinY, play.settings.coinSpeed)

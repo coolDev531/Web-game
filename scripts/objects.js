@@ -102,7 +102,10 @@ class Spaceship extends GameObject {
   constructor(x, y, moveSpeed) {
     super(x, y, moveSpeed);
 
-    this.setImage('images/spaceship.png');
+    this.setImage('images/spaceship.png', {
+      width: 34,
+      height: 28,
+    });
 
     window.addEventListener('mousedown', () => {
       this.isMouseDown = true;
@@ -161,13 +164,12 @@ class Spaceship extends GameObject {
     const pressedRight =
       play.pressedKeys['ArrowRight'] || play.pressedKeys['KeyD'];
 
-    const mouseX = play.mouse.position.x;
-
     if (pressedLeft) {
       this.move(play, 'left'); // move() derived from GameObject super class
     } else if (pressedRight) {
       this.move(play, 'right'); // move() derived from GameObject super class
-    } else if (play.mouse.isActive) {
+    } else if (play.mouse?.isActive) {
+      const mouseX = play.mouse?.position?.x;
       // not pressing keys, move the spaceship with the mouse
       // if the mouse is to the left of the spaceship, move left
       const nextDirection = mouseX < this.position.x ? 'left' : 'right';
@@ -216,12 +218,18 @@ class Bullet extends GameObject {
 }
 
 class Ufo extends GameObject {
-  constructor(x, y, moveSpeed, row, column) {
+  constructor(x, y, moveSpeed, row, column, level) {
     super(x, y, moveSpeed);
     this.row = row;
     this.column = column;
 
-    this.setImage('images/ufo.png');
+    const isEvenLevel = level % 2 === 0;
+    const imageSrc = isEvenLevel ? 'images/ufo2.png' : 'images/ufo.png';
+
+    this.setImage(imageSrc, {
+      width: 32,
+      height: 24,
+    });
   }
 
   draw() {

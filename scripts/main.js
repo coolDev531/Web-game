@@ -147,6 +147,11 @@ class GameBasics {
       const scene = selectScene(sceneKey);
       this.goToScene(scene);
     };
+
+    window.nextLevel = () => {
+      this.level++;
+      this.goToScene(new TransferScene(this.level));
+    };
   }
 
   gameOver() {
