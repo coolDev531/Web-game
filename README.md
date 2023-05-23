@@ -10,3 +10,4 @@
 
 - added coin drops
 - added different ufo sprite for odd levels
+- made resizing more responsive

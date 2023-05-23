@@ -30,11 +30,6 @@ class GameScene extends Scene {
     this.verticalMoving = 0;
     this.ufosAreSinking = false;
     this.currentUfoSinkingValue = 0;
-
-    // bind the handleResize method to this object
-    // doing this so that this isn't referring to the window object when we call the handleResize method
-    this.handleResize = this.handleResize.bind(this);
-    window.addEventListener('resize', this.handleResize, true);
   }
 
   update(play) {
@@ -70,7 +65,6 @@ class GameScene extends Scene {
   }
 
   destroy() {
-    window.removeEventListener('resize', this.handleResize, true);
     this.spaceship.removeEventListeners();
   }
 
@@ -200,18 +194,6 @@ class GameScene extends Scene {
     });
   }
 
-  handleResize() {
-    this.spaceship.position.x = play.width / 2;
-    this.spaceship.position.y = play.boundaries.bottom;
-
-    this.ufos.forEach((ufo) => {
-      const { clampedX, clampedY } = ufo.getBoundaries(play);
-
-      ufo.position.x = clampedX;
-      ufo.position.y = clampedY;
-    });
-  }
-
   detectUfoCollision(play) {
     this.ufos.forEach((ufo, ufoIndex) => {
       this.bullets.forEach((bullet, bulletIndex) => {
@@ -222,7 +204,7 @@ class GameScene extends Scene {
           play.soundsController.playSound('ufoDeath');
 
           // coindrop
-          if (Math.random() > 0.75) {
+          if (Math.random() >= 0.7) {
             const coinY = ufo.position.y + ufo.height / 2;
             this.coins.push(
               new Coin(ufo.position.x, coinY, play.settings.coinSpeed)
