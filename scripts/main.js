@@ -53,6 +53,7 @@ class GameController {
     this.level = 1;
     this.score = 0;
     this.shields = 2;
+    this.playerPowerUps = 0;
 
     // this.boundaries = {
     //   top: 150,
@@ -74,18 +75,16 @@ class GameController {
       spaceshipSpeed: 200,
       bulletSpeed: 130,
       bulletMaxFrequency: 500, // how many bullets can be fired by the spaceship per second one after another
-
       ufoRows: 4,
       ufoColumns: 8,
       ufoSpeed: 35,
       ufoSinkingValue: 30, // how many pixels the ufo will sink when it reaches the boundaries
-
       bombSpeed: 75,
       bombFrequency: 0.05, // how often the ufos will drop bombs
-
       pointsPerUfo: 25,
-
       coinSpeed: 125,
+      powerUpSpeed: 100,
+      maxPowerUps: 2,
     };
 
     // we collect here the different scenes, states of the game

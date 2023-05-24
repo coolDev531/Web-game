@@ -2,9 +2,10 @@ class SoundsController {
   constructor() {
     this.sounds = {
       shot: new Sound('shot.mp3', true),
-      explosion: new Sound('explosion.mp3', true, 0.5),
+      explosion: new Sound('explosion.mp3', true, 0.4),
       ufoDeath: new Sound('ufoDeath.mp3', true),
       coin: new Sound('coin.mp3', true, 0.5),
+      powerup: new Sound('powerup.mp3', false, 1),
     };
   }
 

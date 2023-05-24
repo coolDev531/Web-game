@@ -11,3 +11,7 @@
 - added coin drops
 - added different ufo sprite for odd levels
 - made resizing more responsive
+
+## 5-24-2023
+
+- added powerups (max powerups = 2), each power up adds a bullet, so you can have max 3 bullets.

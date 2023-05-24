@@ -14,6 +14,7 @@ class GameScene extends Scene {
     this.bombs = [];
     this.bombFrequency = settings.bombFrequency;
     this.coins = [];
+    this.powerUps = [];
   }
 
   awake(play) {
@@ -47,6 +48,10 @@ class GameScene extends Scene {
 
     this.coins.forEach((coin, index) => {
       coin.drop(play, index);
+    });
+
+    this.powerUps.forEach((powerup, index) => {
+      powerup.drop(play, index);
     });
 
     // move enemies
@@ -90,6 +95,10 @@ class GameScene extends Scene {
 
     this.coins.forEach((coin) => {
       coin.draw();
+    });
+
+    this.powerUps.forEach((powerup) => {
+      powerup.draw();
     });
 
     this.drawHeader();
@@ -210,6 +219,14 @@ class GameScene extends Scene {
               new Coin(ufo.position.x, coinY, play.settings.coinSpeed)
             );
           }
+
+          // powerup drop
+          if (Math.random() * 100 >= 95) {
+            const powerupY = ufo.position.y + ufo.height / 2;
+            this.powerUps.push(
+              new Powerup(ufo.position.x, powerupY, play.settings.powerUpSpeed)
+            );
+          }
         });
       });
     });
@@ -248,6 +265,29 @@ class GameScene extends Scene {
           this.coins.splice(coinIndex, 1);
           play.score += 100;
           play.soundsController.playSound('coin');
+        },
+        {
+          leftPadding: 2,
+          rightPadding: -2,
+          topPadding: 6,
+        }
+      );
+    });
+
+    // detect if the spaceship has been hit by a powerup
+    this.powerUps.forEach((powerup, powerupIndex) => {
+      powerup.onCollision(
+        this.spaceship,
+        () => {
+          this.powerUps.splice(powerupIndex, 1);
+          play.soundsController.playSound('powerup');
+
+          if (play.playerPowerUps >= play.settings.maxPowerUps) {
+            play.score += 1000;
+            play.playerPowerUps = play.settings.maxPowerUps;
+          } else {
+            play.playerPowerUps += 1;
+          }
         },
         {
           leftPadding: 2,

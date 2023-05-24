@@ -146,15 +146,39 @@ class Spaceship extends GameObject {
 
     if (!shootingEnabled || !shotPressed) return;
 
-    const bullet = new Bullet(
+    const bulletMiddle = new Bullet(
       this.position.x,
       // we want to make sure that the bullet will be created at the top of the spaceship
       this.position.y - this.height / 2,
       play.settings.bulletSpeed
     );
 
+    scene.bullets.push(bulletMiddle);
+
+    // bullet left and middle are if powerups are collected
+    const bulletLeft = new Bullet(
+      this.position.x - this.width / 2,
+      this.position.y - this.height / 2,
+      play.settings.bulletSpeed
+    );
+
+    const bulletRight = new Bullet(
+      this.position.x + this.width / 2,
+      this.position.y - this.height / 2,
+      play.settings.bulletSpeed
+    );
+
+    if (play.playerPowerUps === 1) {
+      bulletMiddle.position.x = this.position.x + this.width / 2; // move the bullet to the right because we only have 2 bullets
+      scene.bullets.push(bulletLeft);
+    }
+
+    if (play.playerPowerUps === 2) {
+      scene.bullets.push(bulletLeft);
+      scene.bullets.push(bulletRight);
+    }
+
     play.soundsController.playSound('shot');
-    scene.bullets.push(bullet);
     scene.lastBulletTime = new Date().getTime();
   }
 
@@ -308,6 +332,32 @@ class Coin extends GameObject {
   removeIfCollidedWithBottomBoundary(play, index) {
     if (this.position.y > play.height) {
       play.currentScene().coins.splice(index, 1);
+    }
+  }
+}
+
+class Powerup extends GameObject {
+  constructor(x, y, moveSpeed) {
+    super(x, y, moveSpeed);
+
+    this.setImage('images/powerup.png', {
+      width: 30,
+      height: 30,
+    });
+  }
+
+  draw(play) {
+    this.drawImage();
+  }
+
+  drop(play, index) {
+    this.move(play, 'down'); // move() derived from GameObject super class
+    this.removeIfCollidedWithBottomBoundary(play, index);
+  }
+
+  removeIfCollidedWithBottomBoundary(play, index) {
+    if (this.position.y > play.height) {
+      play.currentScene().powerUps.splice(index, 1);
     }
   }
 }
