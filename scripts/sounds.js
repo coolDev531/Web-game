@@ -1,11 +1,11 @@
 class SoundsController {
   constructor() {
     this.sounds = {
-      shot: new Sound('shot.mp3', true),
-      explosion: new Sound('explosion.mp3', true, 0.4),
-      ufoDeath: new Sound('ufoDeath.mp3', true),
-      coin: new Sound('coin.mp3', true, 0.5),
-      powerup: new Sound('powerup.mp3', false, 1),
+      shot: new Sound('shot', true),
+      explosion: new Sound('explosion', true, 0.4),
+      ufoDeath: new Sound('ufoDeath', true),
+      coin: new Sound('coin', true, 0.5),
+      powerup: new Sound('powerup', false, 1),
     };
   }
 
@@ -32,9 +32,9 @@ class SoundsController {
 }
 
 class Sound {
-  constructor(fileName, isSpammable = false, volume = 1) {
+  constructor(fileName, isSpammable = false, volume = 1, extention = '.ogg') {
     this.audio = new Audio();
-    this.audio.src = `../sounds/${fileName}`;
+    this.audio.src = `sounds/${fileName}${extention}`;
     this.audio.setAttribute('preload', 'auto');
     this.audio.volume = volume;
     this.isSpammable = isSpammable;
