@@ -17,11 +17,7 @@ class GameOverScene extends Scene {
     ctx.font = '36px Comic Sans MS';
     ctx.fillStyle = '#D7DF01';
     ctx.fillText(
-      "You've reached level " +
-        play.level +
-        ' and your score is ' +
-        play.score +
-        '.',
+      `You've reached level ${play.level} and scored ${play.score} points!`,
       play.width / 2,
       play.height / 2 - 40
     );

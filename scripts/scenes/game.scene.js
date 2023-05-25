@@ -61,9 +61,9 @@ class GameScene extends Scene {
     this.handleUfosSinking(play);
     const frontLineUfos = this.getFrontLineUfos();
     this.handleDropBombs(frontLineUfos);
-    this.handleFrontLineUfosReachedBottom(frontLineUfos, play);
     this.detectUfoCollision(play);
     this.detectSpaceshipCollision(play);
+    this.handleFrontLineUfosReachedBottom(frontLineUfos, play);
 
     if (this.ufos.length === 0) {
       console.log(`Level ${play.level} completed!`);
@@ -214,7 +214,7 @@ class GameScene extends Scene {
         bullet.onCollision(ufo, () => {
           this.ufos.splice(ufoIndex, 1);
           this.bullets.splice(bulletIndex, 1);
-          play.score += play.settings.pointsPerUfo;
+          play.incrementScore(play.settings.pointsPerUfo);
           play.soundsController.playSound('ufoDeath');
 
           // coindrop
@@ -268,7 +268,7 @@ class GameScene extends Scene {
         this.spaceship,
         () => {
           this.coins.splice(coinIndex, 1);
-          play.score += 100;
+          play.incrementScore(play.settings.pointsPerCoin);
           play.soundsController.playSound('coin');
         },
         {
@@ -288,7 +288,7 @@ class GameScene extends Scene {
           play.soundsController.playSound('powerup');
 
           if (play.playerPowerUps >= play.settings.maxPowerUps) {
-            play.score += 1000;
+            play.incrementScore(1000);
             play.playerPowerUps = play.settings.maxPowerUps;
           } else {
             play.playerPowerUps += 1;
@@ -382,8 +382,8 @@ class GameScene extends Scene {
     if (frontLineUfos.length > 0) {
       const frontLineUfo = frontLineUfos[0];
       if (
-        frontLineUfo.position.y + frontLineUfo.height >=
-        play.boundaries.bottom
+        frontLineUfo &&
+        frontLineUfo.position.y + frontLineUfo.height >= play.boundaries.bottom
       ) {
         play.gameOver();
       }

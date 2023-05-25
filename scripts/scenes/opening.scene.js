@@ -67,9 +67,7 @@ class OpeningScene extends Scene {
 
   onKeyDown(play, keyCode) {
     if (keyCode === 'Space') {
-      play.level = 1;
-      play.score = 0;
-      play.shields = 2;
+      play.resetStats();
 
       // this is when we start the game with space from opening scene
       play.goToScene(new TransferScene(play.level));

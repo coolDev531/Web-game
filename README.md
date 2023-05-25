@@ -16,3 +16,4 @@
 
 - added powerups (max powerups = 2), each power up adds a bullet, so you can have max 3 bullets.
 - fixed a bug where ufos would not stop sinking at levels 5 and 6 when reaching the boundary the first time.
+- add shields when score is multiple of 10,000

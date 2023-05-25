@@ -49,6 +49,7 @@ class GameController {
     this.canvas = canvas;
     this.width = canvas.width;
     this.height = canvas.height;
+    this.soundsController = new SoundsController();
 
     this.level = 1;
     this.score = 0;
@@ -83,6 +84,7 @@ class GameController {
       bombFrequency: 0.05, // how often the ufos will drop bombs
       pointsPerUfo: 25,
       coinSpeed: 125,
+      pointsPerCoin: 100,
       powerUpSpeed: 100,
       maxPowerUps: 2,
     };
@@ -154,6 +156,23 @@ class GameController {
   onKeyUp(keyCode) {
     delete this.pressedKeys[keyCode];
   }
+
+  incrementScore(points) {
+    this.score += points;
+
+    const isMultipleOfTenThousand = this.score % 10000 === 0;
+    if (isMultipleOfTenThousand) {
+      this.shields += 1;
+      this.soundsController.playSound('powerup');
+    }
+  }
+
+  resetStats() {
+    this.level = 1;
+    this.score = 0;
+    this.shields = 2;
+    this.playerPowerUps = 0;
+  }
 }
 
 function gameLoop(play) {
@@ -216,7 +235,6 @@ function addEventListeners(play) {
 }
 
 const play = new GameController(canvas);
-play.soundsController = new SoundsController();
 play.start();
 
 function getMousePosition(canvas, e) {
