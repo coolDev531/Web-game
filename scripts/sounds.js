@@ -32,9 +32,9 @@ class SoundsController {
 }
 
 class Sound {
-  constructor(fileName, isSpammable = false, volume = 1, extention = '.ogg') {
+  constructor(fileName, isSpammable = false, volume = 1, extension = '.ogg') {
     this.audio = new Audio();
-    this.audio.src = `sounds/${fileName}${extention}`;
+    this.audio.src = `sounds/${fileName}${extension}`;
     this.audio.setAttribute('preload', 'auto');
     this.audio.volume = volume;
     this.isSpammable = isSpammable;
