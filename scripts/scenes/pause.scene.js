@@ -1,6 +1,8 @@
 class PauseScene extends Scene {
   constructor() {
     super();
+    this.previousTitle = document.title;
+    document.title = `UFO Hunter | Paused`;
   }
 
   draw(play) {
@@ -49,6 +51,7 @@ class PauseScene extends Scene {
 
   onKeyDown(play, keyCode) {
     if (keyCode === 'Escape') {
+      document.title = this.previousTitle;
       play.popScene();
     }
 

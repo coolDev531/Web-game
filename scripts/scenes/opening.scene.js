@@ -1,6 +1,7 @@
 class OpeningScene extends Scene {
   constructor() {
     const { framesElapsed } = super();
+    document.title = `UFO Hunter`;
   }
 
   draw(play) {

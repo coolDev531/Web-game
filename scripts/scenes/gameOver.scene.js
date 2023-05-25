@@ -3,6 +3,10 @@ class GameOverScene extends Scene {
     super();
   }
 
+  awake() {
+    document.title = `UFO Hunter | Game Over`;
+  }
+
   draw(play) {
     super.draw(play);
     ctx.font = '40px Comic Sans MS';

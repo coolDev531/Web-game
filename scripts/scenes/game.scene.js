@@ -18,6 +18,8 @@ class GameScene extends Scene {
   }
 
   awake(play) {
+    document.title = `UFO Hunter | Level ${this.level}`;
+
     this.spaceship = new Spaceship(
       play.width / 2,
       play.boundaries.bottom,
@@ -56,9 +58,10 @@ class GameScene extends Scene {
 
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
-    this.handleUfosSinking();
+    this.handleUfosSinking(play);
     const frontLineUfos = this.getFrontLineUfos();
     this.handleDropBombs(frontLineUfos);
+    this.handleFrontLineUfosReachedBottom(frontLineUfos, play);
     this.detectUfoCollision(play);
     this.detectSpaceshipCollision(play);
 
@@ -114,23 +117,25 @@ class GameScene extends Scene {
       this.verticalMoving
     );
 
-    if (reachedLeftOrRightBoundary) {
-      this.ufoTurnAround *= -1;
-      this.horizontalMoving = 0;
-      this.verticalMoving = 1;
-      this.ufosAreSinking = true;
+    if (!this.ufosAreSinking) {
+      if (reachedLeftOrRightBoundary) {
+        this.ufoTurnAround *= -1;
+        this.horizontalMoving = 0;
+        this.verticalMoving = 1;
+        this.ufosAreSinking = true;
+      }
     }
 
     ufo.position.x = newX;
     ufo.position.y = newY;
   }
 
-  handleUfosSinking() {
+  handleUfosSinking(play) {
     if (this.ufosAreSinking) {
       this.currentUfoSinkingValue +=
-        this.ufoSpeed * this.settings.updateSeconds;
+        this.ufoSpeed * play.settings.updateSeconds;
 
-      if (this.currentUfoSinkingValue >= this.settings.ufoSinkingValue) {
+      if (this.currentUfoSinkingValue >= play.settings.ufoSinkingValue) {
         // this is when the ufos have already sunk the amount of pixels we wanted them to sink
         this.ufosAreSinking = false;
         this.currentUfoSinkingValue = 0;
@@ -370,6 +375,18 @@ class GameScene extends Scene {
         play.width / 2,
         play.boundaries.top - 25
       );
+    }
+  }
+
+  handleFrontLineUfosReachedBottom(frontLineUfos, play) {
+    if (frontLineUfos.length > 0) {
+      const frontLineUfo = frontLineUfos[0];
+      if (
+        frontLineUfo.position.y + frontLineUfo.height >=
+        play.boundaries.bottom
+      ) {
+        play.gameOver();
+      }
     }
   }
 }

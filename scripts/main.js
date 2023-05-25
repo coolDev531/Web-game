@@ -231,3 +231,7 @@ function getMousePosition(canvas, e) {
     y: (e.clientY - rect.top) * scale,
   };
 }
+
+window.goToLevel = (level) => {
+  play.goToScene(new TransferScene(level));
+};
