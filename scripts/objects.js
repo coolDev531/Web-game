@@ -54,6 +54,8 @@ class GameObject {
     gameObject,
     { topPadding = 0, rightPadding = 0, leftPadding = 0 }
   ) {
+    if (!this.position || !gameObject?.position) return;
+
     const left =
       this.position.x + leftPadding >=
       gameObject.position.x - gameObject.width / 2;
@@ -101,6 +103,8 @@ class GameObject {
 class Spaceship extends GameObject {
   constructor(x, y, moveSpeed) {
     super(x, y, moveSpeed);
+
+    this.canHit = true;
 
     this.setImage('images/spaceship.png', {
       width: 34,
@@ -212,6 +216,25 @@ class Spaceship extends GameObject {
     const { clampedX, clampedY } = this.getBoundaries(play);
     this.position.x = clampedX;
     this.position.y = clampedY; // don't actually need this clampedY because we're not moving up and down we're only moving left and right check handleMovement()
+  }
+
+  damage(play, amountDealt = 1) {
+    if (!this.canHit) return;
+
+    play.soundsController.playSound('explosion');
+
+    this.canHit = false;
+
+    setTimeout(() => {
+      this.canHit = true;
+    }, play.settings.spaceshipHitDelay);
+
+    // game over
+    if (play.shields === 0) {
+      play.gameOver();
+    }
+
+    play.shields -= amountDealt;
   }
 }
 
@@ -359,5 +382,84 @@ class Powerup extends GameObject {
     if (this.position.y > play.height) {
       play.currentScene().powerUps.splice(index, 1);
     }
+  }
+}
+
+class Asteroid extends GameObject {
+  constructor(x, y, moveSpeed) {
+    super();
+    this.canHit = true;
+    this.health = 3;
+
+    this.position = {
+      x,
+      y,
+    };
+
+    this.moveSpeed = {
+      x: moveSpeed,
+      y: moveSpeed,
+    };
+
+    this.setImage('images/asteroid.png', {
+      width: 64,
+      height: 64,
+    });
+  }
+
+  draw(play) {
+    this.drawImage();
+  }
+
+  update(play) {
+    this.dvdLogoIt(play);
+
+    const spaceship = play.currentScene().spaceship;
+
+    this.onCollision(
+      spaceship,
+      () => {
+        spaceship.damage(play);
+      },
+      {
+        topPadding: 10,
+        rightPadding: 10,
+        leftPadding: 10,
+      }
+    );
+  }
+
+  damage(play, index) {
+    if (!this.canHit) return;
+
+    this.canHit = false;
+    this.health -= 1;
+
+    setTimeout(() => {
+      this.canHit = true;
+    }, 1000);
+
+    play.soundsController.playSound('ufoDeath');
+
+    if (this.health > 0) return;
+
+    play.incrementScore(play.settings.pointsPerAsteroid);
+    play.currentScene().asteroids.splice(index);
+  }
+
+  dvdLogoIt(play) {
+    // // move like the dvd logo thing, bounce off the walls
+    const { clampedX, clampedY } = this.getBoundaries(play);
+
+    if (clampedX !== this.position.x) {
+      this.position.x = clampedX;
+      this.moveSpeed.x *= -1;
+    }
+    if (clampedY !== this.position.y) {
+      this.position.y = clampedY;
+      this.moveSpeed.y *= -1;
+    }
+    this.position.x += this.moveSpeed.x * play.settings.updateSeconds;
+    this.position.y += this.moveSpeed.y * play.settings.updateSeconds;
   }
 }

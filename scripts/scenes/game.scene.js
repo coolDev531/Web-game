@@ -15,6 +15,7 @@ class GameScene extends Scene {
     this.bombFrequency = settings.bombFrequency;
     this.coins = [];
     this.powerUps = [];
+    this.asteroids = [];
   }
 
   awake(play) {
@@ -33,6 +34,14 @@ class GameScene extends Scene {
     this.verticalMoving = 0;
     this.ufosAreSinking = false;
     this.currentUfoSinkingValue = 0;
+
+    this.asteroids.push(
+      new Asteroid(
+        play.boundaries.left,
+        play.boundaries.top,
+        play.settings.spaceshipSpeed
+      )
+    );
   }
 
   update(play) {
@@ -56,6 +65,10 @@ class GameScene extends Scene {
       powerup.drop(play, index);
     });
 
+    this.asteroids.forEach((asteroid) => {
+      asteroid.update(play);
+    });
+
     // move enemies
     this.ufos.forEach((ufo) => this.handleMoveUfo(ufo, play));
     this.handleUfosSinking(play);
@@ -63,13 +76,9 @@ class GameScene extends Scene {
     this.handleDropBombs(frontLineUfos);
     this.detectUfoCollision(play);
     this.detectSpaceshipCollision(play);
+    this.detectAsteroidCollision(play);
     this.handleFrontLineUfosReachedBottom(frontLineUfos, play);
-
-    if (this.ufos.length === 0) {
-      console.log(`Level ${play.level} completed!`);
-      play.level += 1;
-      play.goToScene(new TransferScene(play.level));
-    }
+    // this.checkLevelCompleted(play);
   }
 
   destroy() {
@@ -104,8 +113,20 @@ class GameScene extends Scene {
       powerup.draw();
     });
 
+    this.asteroids.forEach((asteroid) => {
+      asteroid.draw();
+    });
+
     this.drawHeader();
     this.drawFooter();
+  }
+
+  checkLevelCompleted(play) {
+    if (this.ufos.length === 0) {
+      console.log(`Level ${play.level} completed!`);
+      play.level += 1;
+      play.goToScene(new TransferScene(play.level));
+    }
   }
 
   handleMoveUfo(ufo, play) {
@@ -174,7 +195,7 @@ class GameScene extends Scene {
       }
     }
 
-    this.ufos = initialUfos;
+    // this.ufos = initialUfos;
   }
 
   // ufos bombing
@@ -237,6 +258,25 @@ class GameScene extends Scene {
     });
   }
 
+  detectAsteroidCollision(play) {
+    this.bullets.forEach((bullet, bulletIndex) => {
+      this.asteroids.forEach((asteroid, asteroidIndex) => {
+        bullet.onCollision(
+          asteroid,
+          () => {
+            asteroid.damage(play, asteroidIndex);
+          },
+          {
+            topPadding: 10,
+            leftPadding: 10,
+            rightPadding: 10,
+            bottomPadding: 10,
+          }
+        );
+      });
+    });
+  }
+
   detectSpaceshipCollision(play) {
     // detect if the spaceship has been hit by a bomb
     this.bombs.forEach((bomb, bombIndex) => {
@@ -244,15 +284,7 @@ class GameScene extends Scene {
         this.spaceship,
         () => {
           this.bombs.splice(bombIndex, 1);
-
-          play.soundsController.playSound('explosion');
-
-          // game over
-          if (play.shields === 0) {
-            play.gameOver();
-          }
-
-          play.shields -= 1;
+          this.spaceship.damage(play);
         },
         {
           leftPadding: 2,

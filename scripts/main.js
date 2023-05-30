@@ -87,6 +87,8 @@ class GameController {
       pointsPerCoin: 100,
       powerUpSpeed: 100,
       maxPowerUps: 2,
+      spaceshipHitDelay: 2000, // how long the spaceship will be invulnerable after being hit
+      pointsPerAsteroid: 50,
     };
 
     // we collect here the different scenes, states of the game
