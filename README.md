@@ -27,3 +27,7 @@
 - added asteroids and asteroid levels (asteroids bounce off the edges of the boundaries)
 - made bullets a bit faster
 - level won't end if there are still powerups or coins on the screen
+
+# Known Issues
+
+- Images load slow on deployment
