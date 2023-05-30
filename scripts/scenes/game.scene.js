@@ -27,21 +27,21 @@ class GameScene extends Scene {
       play.settings.spaceshipSpeed
     );
 
-    // create enemies
-    this.spawnUfos(play);
+    // every third level is a asteroid level. The rest are ufo levels
+    this.isUfoLevel = this.level % 3 !== 0;
+
+    if (this.isUfoLevel) {
+      // create enemies
+      this.spawnUfos(play);
+    } else {
+      this.spawnAsteroids(play);
+      play.settings.bulletSpeed += 10;
+    }
 
     this.horizontalMoving = 1;
     this.verticalMoving = 0;
     this.ufosAreSinking = false;
     this.currentUfoSinkingValue = 0;
-
-    this.asteroids.push(
-      new Asteroid(
-        play.boundaries.left,
-        play.boundaries.top,
-        play.settings.spaceshipSpeed
-      )
-    );
   }
 
   update(play) {
@@ -78,7 +78,7 @@ class GameScene extends Scene {
     this.detectSpaceshipCollision(play);
     this.detectAsteroidCollision(play);
     this.handleFrontLineUfosReachedBottom(frontLineUfos, play);
-    // this.checkLevelCompleted(play);
+    this.checkLevelCompleted(play);
   }
 
   destroy() {
@@ -122,7 +122,12 @@ class GameScene extends Scene {
   }
 
   checkLevelCompleted(play) {
-    if (this.ufos.length === 0) {
+    const enemyArrayToCheck = this.isUfoLevel ? this.ufos : this.asteroids;
+
+    // don't end the level if there are coins or powerups on the screen
+    const drops = [...this.coins, ...this.powerUps];
+
+    if (enemyArrayToCheck.length === 0 && drops.length === 0) {
       console.log(`Level ${play.level} completed!`);
       play.level += 1;
       play.goToScene(new TransferScene(play.level));
@@ -195,7 +200,31 @@ class GameScene extends Scene {
       }
     }
 
-    // this.ufos = initialUfos;
+    this.ufos = initialUfos;
+  }
+
+  spawnAsteroids(play) {
+    const initialAsteroids = [];
+
+    const asteroidLevelsBeaten = Math.floor(this.level / 3) - 1;
+    this.asteroidSpeed = play.settings.asteroidSpeed + this.level * 10; // increase the speed of the asteroids by 10 for each level
+
+    const asteroidCount = 1 + asteroidLevelsBeaten;
+
+    for (let i = 0; i < asteroidCount; i++) {
+      const randomX = Math.floor(
+        Math.random() * (play.boundaries.right - play.boundaries.left + 1) +
+          play.boundaries.left
+      );
+
+      const positionX = randomX;
+
+      initialAsteroids.push(
+        new Asteroid(positionX, play.boundaries.top, this.asteroidSpeed)
+      );
+    }
+
+    this.asteroids = initialAsteroids;
   }
 
   // ufos bombing
@@ -265,6 +294,7 @@ class GameScene extends Scene {
           asteroid,
           () => {
             asteroid.damage(play, asteroidIndex);
+            this.bullets.splice(bulletIndex, 1);
           },
           {
             topPadding: 10,
@@ -322,6 +352,7 @@ class GameScene extends Scene {
           if (play.playerPowerUps >= play.settings.maxPowerUps) {
             play.incrementScore(1000);
             play.playerPowerUps = play.settings.maxPowerUps;
+            play.settings.bulletSpeed += 15;
           } else {
             play.playerPowerUps += 1;
           }

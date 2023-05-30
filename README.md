@@ -21,3 +21,9 @@
 ## 5-25-2023
 
 - fixed audio not working on itch.io version
+
+## 5-30-2023
+
+- added asteroids and asteroid levels (asteroids bounce off the edges of the boundaries)
+- made bullets a bit faster
+- level won't end if there are still powerups or coins on the screen

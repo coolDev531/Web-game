@@ -388,7 +388,6 @@ class Powerup extends GameObject {
 class Asteroid extends GameObject {
   constructor(x, y, moveSpeed) {
     super();
-    this.canHit = true;
     this.health = 3;
 
     this.position = {
@@ -430,14 +429,7 @@ class Asteroid extends GameObject {
   }
 
   damage(play, index) {
-    if (!this.canHit) return;
-
-    this.canHit = false;
     this.health -= 1;
-
-    setTimeout(() => {
-      this.canHit = true;
-    }, 1000);
 
     play.soundsController.playSound('ufoDeath');
 
@@ -445,20 +437,52 @@ class Asteroid extends GameObject {
 
     play.incrementScore(play.settings.pointsPerAsteroid);
     play.currentScene().asteroids.splice(index);
+
+    const coinY = this.position.y + this.height / 2;
+    play
+      .currentScene()
+      .coins.push(new Coin(this.position.x, coinY, play.settings.coinSpeed));
   }
 
   dvdLogoIt(play) {
-    // // move like the dvd logo thing, bounce off the walls
-    const { clampedX, clampedY } = this.getBoundaries(play);
+    // move like the dvd logo thing, bounce off the walls
 
-    if (clampedX !== this.position.x) {
-      this.position.x = clampedX;
+    // the commented out code uses the play boundaries to bounce off the walls, but we want to bounce off the edges of the screen instead
+    // const { clampedX, clampedY } = this.getBoundaries(play);
+
+    // if (clampedX !== this.position.x) {
+    //   this.position.x = clampedX;
+    //   this.moveSpeed.x *= -1;
+    // }
+    // if (clampedY !== this.position.y) {
+    //   this.position.y = clampedY;
+    //   this.moveSpeed.y *= -1;
+    // }
+    // this.position.x += this.moveSpeed.x * play.settings.updateSeconds;
+    // this.position.y += this.moveSpeed.y * play.settings.updateSeconds;
+
+    // bounce off edges of screen instead of play boundaries (bottom is play boundary though)
+    const leftScreenEdge = 0 + this.width / 2;
+    const rightScreenEdge = play.width - this.width / 2;
+    const topScreenEdge = 0 + this.height / 2;
+    const bottomScreenEdge = play.boundaries.bottom;
+
+    if (this.position.x < leftScreenEdge) {
       this.moveSpeed.x *= -1;
     }
-    if (clampedY !== this.position.y) {
-      this.position.y = clampedY;
+
+    if (this.position.x > rightScreenEdge) {
+      this.moveSpeed.x *= -1;
+    }
+
+    if (this.position.y < topScreenEdge) {
       this.moveSpeed.y *= -1;
     }
+
+    if (this.position.y > bottomScreenEdge) {
+      this.moveSpeed.y *= -1;
+    }
+
     this.position.x += this.moveSpeed.x * play.settings.updateSeconds;
     this.position.y += this.moveSpeed.y * play.settings.updateSeconds;
   }

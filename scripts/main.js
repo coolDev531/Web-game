@@ -74,7 +74,7 @@ class GameController {
       // game settings
       updateSeconds: 1 / 60,
       spaceshipSpeed: 200,
-      bulletSpeed: 130,
+      bulletSpeed: 150,
       bulletMaxFrequency: 500, // how many bullets can be fired by the spaceship per second one after another
       ufoRows: 4,
       ufoColumns: 8,
@@ -89,6 +89,7 @@ class GameController {
       maxPowerUps: 2,
       spaceshipHitDelay: 2000, // how long the spaceship will be invulnerable after being hit
       pointsPerAsteroid: 50,
+      asteroidSpeed: 125,
     };
 
     // we collect here the different scenes, states of the game
@@ -253,5 +254,6 @@ function getMousePosition(canvas, e) {
 }
 
 window.goToLevel = (level) => {
+  play.level = level;
   play.goToScene(new TransferScene(level));
 };
